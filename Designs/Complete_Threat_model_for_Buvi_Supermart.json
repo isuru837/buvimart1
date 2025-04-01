@@ -1,0 +1,36 @@
+{
+  "version": "2.4.1",
+  "summary": {
+    "title": "Complete_Threat_model_for_Buvi_Supermart",
+    "owner": "lasantha",
+    "description": "Complete Threat model for buvi supermart web application",
+    "id": 0
+  },
+  "detail": {
+    "contributors": [
+      {
+        "name": "Lasantha"
+      },
+      {
+        "name": "Nipun"
+      },
+      {
+        "name": "Asanka"
+      }
+    ],
+    "diagrams": [
+      {
+        "id": 0,
+        "title": "Complete_Data_Flow",
+        "diagramType": "STRIDE",
+        "placeholder": "New STRIDE diagram description",
+        "thumbnail": "./public/content/images/thumbnail.stride.jpg",
+        "version": "2.4.1",
+        "cells": []
+      }
+    ],
+    "diagramTop": 1,
+    "reviewer": "Nipun,Asanka",
+    "threatTop": 0
+  }
+}
