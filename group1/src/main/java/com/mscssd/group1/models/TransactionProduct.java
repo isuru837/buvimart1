@@ -1,0 +1,82 @@
+package com.mscssd.group1.models;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+
+@Entity
+@Table(name = "transaction_products")
+public class TransactionProduct {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "transaction_id", nullable = false)
+    private Transaction transaction;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
+    @NotNull(message = "Quantity is required")
+    @Min(value = 1, message = "Quantity must be at least 1")
+    private Integer quantity;
+
+    @NotNull(message = "Price at time of transaction is required")
+    @Min(value = 0, message = "Price must be greater than or equal to 0")
+    private Double priceAtTransaction;
+
+    @Column(name = "is_deleted", nullable = false)
+    private boolean deleted = false;
+
+    // Getters
+    public Long getId() {
+        return id;
+    }
+
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Double getPriceAtTransaction() {
+        return priceAtTransaction;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    // Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setPriceAtTransaction(Double priceAtTransaction) {
+        this.priceAtTransaction = priceAtTransaction;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+} 
