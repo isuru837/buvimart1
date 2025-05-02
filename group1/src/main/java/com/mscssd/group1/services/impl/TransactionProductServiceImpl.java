@@ -1,7 +1,9 @@
-package com.mscssd.group1.services;
+package com.mscssd.group1.services.impl;
 
 import com.mscssd.group1.models.TransactionProduct;
 import com.mscssd.group1.repositories.TransactionProductRepository;
+import com.mscssd.group1.services.TransactionProductService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,11 +12,11 @@ import java.util.List;
 @Service
 public class TransactionProductServiceImpl implements TransactionProductService {
 
-    private final TransactionProductRepository transactionProductRepository;
-
-    @Autowired
-    public TransactionProductService(TransactionProductRepository transactionProductRepository) {
-        this.transactionProductRepository = transactionProductRepository;
+    private TransactionProductRepository transactionProductRepository = null;
+    
+        @Autowired
+        public void TransactionProductService(TransactionProductRepository transactionProductRepository) {
+            this.transactionProductRepository = transactionProductRepository;
     }
 
     /**
