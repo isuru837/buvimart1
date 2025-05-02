@@ -16,6 +16,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAll() {
+
         return new ArrayList<>(products);
     }
 
@@ -41,4 +42,5 @@ public class ProductServiceImpl implements ProductService {
     public void deleteById(Long id) {
         products.removeIf(product -> product.getId().equals(id));
     }
+    
 } 
