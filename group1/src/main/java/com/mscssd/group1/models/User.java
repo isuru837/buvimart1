@@ -159,4 +159,20 @@ public class User {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
+
+    // Copy constructor
+    public User(User other) {
+        this.userId = other.userId;
+        this.userName = other.userName;
+        this.password = other.password;
+        this.firstName = other.firstName;
+        this.lastName = other.lastName;
+        this.addressLine1 = other.addressLine1;
+        this.addressLine2 = other.addressLine2;
+        this.addressLine3 = other.addressLine3;
+        this.email = other.email;
+        this.mobile = other.mobile;
+        this.userType = other.userType;
+        this.deleted = other.deleted;
+    }
 } 

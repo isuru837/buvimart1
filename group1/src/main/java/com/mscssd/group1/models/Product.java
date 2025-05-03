@@ -77,7 +77,16 @@ public class Product {
     }
 
     public void setDeleted(boolean deleted) {
-        
         this.deleted = deleted;
+    }
+
+    // Copy constructor
+    public Product(Product other) {
+        this.id = other.id;
+        this.name = other.name;
+        this.description = other.description;
+        this.price = other.price;
+        this.stockQuantity = other.stockQuantity;
+        this.deleted = other.deleted;
     }
 } 

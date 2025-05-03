@@ -36,11 +36,11 @@ public class TransactionProduct {
     }
 
     public Transaction getTransaction() {
-        return transaction;
+        return new Transaction(transaction);
     }
 
     public Product getProduct() {
-        return product;
+        return new Product(product);
     }
 
     public Integer getQuantity() {
@@ -61,11 +61,11 @@ public class TransactionProduct {
     }
 
     public void setTransaction(Transaction transaction) {
-        this.transaction = transaction;
+        this.transaction = new Transaction(transaction);
     }
 
     public void setProduct(Product product) {
-        this.product = product;
+        this.product = new Product(product);
     }
 
     public void setQuantity(Integer quantity) {
