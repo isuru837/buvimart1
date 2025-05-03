@@ -43,7 +43,7 @@ public class Transaction {
     }
 
     public User getCustomer() {
-        return customer;
+        return new User(customer);
     }
 
     public boolean isDeleted() {
@@ -64,10 +64,19 @@ public class Transaction {
     }
 
     public void setCustomer(User customer) {
-        this.customer = customer;
+        this.customer = new User(customer);
     }
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    // Copy constructor
+    public Transaction(Transaction other) {
+        this.transactionId = other.transactionId;
+        this.transactionDate = other.transactionDate;
+        this.transactionValue = other.transactionValue;
+        this.customer = new User(other.customer);
+        this.deleted = other.deleted;
     }
 } 
