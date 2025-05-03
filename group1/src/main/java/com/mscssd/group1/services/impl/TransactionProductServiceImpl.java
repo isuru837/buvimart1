@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class TransactionProductServiceImpl implements TransactionProductService {
@@ -15,8 +16,8 @@ public class TransactionProductServiceImpl implements TransactionProductService 
     private TransactionProductRepository transactionProductRepository = null;
     
         @Autowired
-        public void TransactionProductService(TransactionProductRepository transactionProductRepository) {
-            this.transactionProductRepository = transactionProductRepository;
+        public void transactionProductService(TransactionProductRepository transactionProductRepository) {
+            this.transactionProductRepository = Objects.requireNonNull(transactionProductRepository, "Transaction product repository cannot be null");
     }
 
     /**
