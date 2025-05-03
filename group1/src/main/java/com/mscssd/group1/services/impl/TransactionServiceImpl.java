@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -17,7 +18,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     public TransactionServiceImpl(TransactionRepository transactionRepository) {
-        this.transactionRepository = transactionRepository;
+        this.transactionRepository = Objects.requireNonNull(transactionRepository, "Transaction repository cannot be null");
     }
 
     @Override
