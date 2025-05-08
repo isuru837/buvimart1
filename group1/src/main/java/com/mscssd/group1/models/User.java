@@ -175,4 +175,7 @@ public class User {
         this.userType = other.userType;
         this.deleted = other.deleted;
     }
+    public User() {
+        
+    }
 } 
