@@ -3,6 +3,7 @@ package com.mscssd.group1.repositories;
 import com.mscssd.group1.models.User;
 import com.mscssd.group1.models.UserType;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,6 +19,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserName(String userName);
     Optional<User> findByEmail(String email);
     Optional<User> findByMobile(String mobile);
+    List<User> findAll(Sort sort);
+    
+    // Find user by username and password
+    @Query("SELECT u FROM User u WHERE u.userName = :userName AND u.password = :password")
+    Optional<User> findByUserNameAndPassword(@Param("userName") String userName, @Param("password") String password);
+    
     boolean existsByUserName(String userName);
     boolean existsByEmail(String email);
     boolean existsByMobile(String mobile);
@@ -55,4 +62,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.deleted = true WHERE u.userId = :id")
     void deleteUser(@Param("id") Long id);
+    Optional<User> findUserByUserName(String userName);
 } 
