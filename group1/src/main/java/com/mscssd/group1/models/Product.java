@@ -89,4 +89,7 @@ public class Product {
         this.stockQuantity = other.stockQuantity;
         this.deleted = other.deleted;
     }
+    public Product() {
+        
+    }
 } 

@@ -38,6 +38,10 @@ public class TokenManager {
         return new Token(jwToken, refreshToken);
     }
 
+    public String generateAccessToken(String username) {
+        return generateToken(username, jwtExpiration);
+    }
+
     private String generateToken(String username, Long expiration) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username, expiration);

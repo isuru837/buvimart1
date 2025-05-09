@@ -14,18 +14,18 @@ public class LoginSessionDto {
 
     // Parameterized constructor
     public LoginSessionDto(User user, Token token, String loginTime) {
-        this.user = user;
-        this.token = token;
+        this.user = new User(user);     // Copy
+        this.token = new Token(token);  // Copy
         this.loginTime = loginTime;
     }
 
     // Getters
     public User getUser() {
-        return user;
+        return new User(user);
     }
 
     public Token getToken() {
-        return token;
+        return new Token(token);
     }
 
     public String getLoginTime() {
@@ -34,11 +34,11 @@ public class LoginSessionDto {
 
     // Setters
     public void setUser(User user) {
-        this.user = user;
+        this.user = new User(user);
     }
 
     public void setToken(Token token) {
-        this.token = token;
+        this.token = new Token(token);
     }
 
     public void setLoginTime(String loginTime) {

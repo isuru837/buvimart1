@@ -14,6 +14,14 @@ public class Token {
         this.refreshToken = refreshToken;
     }
 
+    // Copy constructor
+    public Token(Token token) {
+        if (token != null) {
+            this.jwToken = token.jwToken;
+            this.refreshToken = token.refreshToken;
+        }
+    }
+
     // Getter for jwToken
     public String getJwToken() {
         return jwToken;
