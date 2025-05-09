@@ -1,14 +1,14 @@
 package com.mscssd.group1.services;
 
 import com.mscssd.group1.dto.CredentialDto;
-import com.mscssd.group1.models.Token;
+import com.mscssd.group1.dto.LoginSessionDto;
 
 public interface LoginService {
     /**
-     * Authenticates user credentials and returns tokens
+     * Authenticates user credentials and returns login session information
      * @param credentials User credentials containing username and password
-     * @return Token containing JWT and refresh tokens if authentication is successful
+     * @return LoginSessionDto containing user information and tokens if authentication is successful
      * @throws RuntimeException if authentication fails
      */
-    Token login(CredentialDto credentials);
+    LoginSessionDto login(CredentialDto credentials);
 } 
