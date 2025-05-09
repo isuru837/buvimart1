@@ -1,0 +1,6 @@
+1. Install MySQL data base server with default recommended configurations .
+2. Run group1 project by cd in to it and using mvn spring-boot:run command in it. 
+3. import postman collection to postman if not install install it first.
+4. user SuperAdmin and 123456 to login and generate tokens in success full login. 
+5. use jwToken in authorization tab imported postman , as token value 
+6. try some product related api calls with different payloads . 

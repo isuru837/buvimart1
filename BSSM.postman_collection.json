@@ -1,0 +1,144 @@
+{
+	"info": {
+		"_postman_id": "71fb18ef-1ab1-4c28-aa63-675cd24e1715",
+		"name": "BSSM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16118752"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userName\":\"SupAdmin\",\r\n    \"password\":\"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/api/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createUser",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \r\n  \"userName\": \"SupAdmin1\",\r\n  \"password\": \"123456\",\r\n  \"firstName\": \"Super\",\r\n  \"lastName\": \"Admin\",\r\n  \"addressLine1\": \"System1\",\r\n  \"addressLine2\": \"System1\",\r\n  \"addressLine3\": \"System1\",\r\n  \"email\": \"laskum123@gmail.com\",\r\n  \"mobile\": \"0701722860\",\r\n  \"userType\": \"ADMIN\",\r\n  \"deleted\": false\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/api/users/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"users",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "addProduct",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXBBZG1pbiIsImlhdCI6MTc0NjgwODUxMSwiZXhwIjoxNzQ2ODEyMTExfQ.x5rWClcYpLdvALgXoXubowYT02qfZA3PVJn9RhPt5c4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXBBZG1pbiIsImlhdCI6MTc0NjgwMzYyMCwiZXhwIjoxNzQ2ODA3MjIwfQ.V0i-aBhu_mMLEkjJXM535pcOyH4-9Tp-4KfyXG9wI6I",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Product1\",\r\n    \"description\": \"Product Description1\",\r\n    \"price\": 102.99,\r\n    \"stockQuantity\": 1000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/api/products/add",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"products",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getAllProducts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXBBZG1pbiIsImlhdCI6MTc0NjgwODUxMSwiZXhwIjoxNzQ2ODEyMTExfQ.x5rWClcYpLdvALgXoXubowYT02qfZA3PVJn9RhPt5c4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8085/api/products/all",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"products",
+						"all"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
