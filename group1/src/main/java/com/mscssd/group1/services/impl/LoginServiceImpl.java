@@ -1,7 +1,7 @@
 package com.mscssd.group1.services.impl;
 
-import com.mscssd.group1.dto.CredentialDto;
-import com.mscssd.group1.dto.LoginSessionDto;
+import com.mscssd.group1.dtos.CredentialDto;
+import com.mscssd.group1.dtos.LoginSessionDto;
 import com.mscssd.group1.models.Token;
 import com.mscssd.group1.models.User;
 import com.mscssd.group1.services.LoginService;
@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public LoginSessionDto login(CredentialDto credentials) {
         // Validate user credentials
-        Optional<User> userOpt = userService.findUserByUserNameAndPassword(
+        Optional<User> userOpt = userService.findByUserNameAndPassword(
             credentials.getUserName(),
             Encoder.encodePassword(credentials.getPassword())
         );

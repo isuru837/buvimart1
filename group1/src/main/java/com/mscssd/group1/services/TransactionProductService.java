@@ -25,4 +25,6 @@ public interface TransactionProductService {
      * @return List of transaction products
      */
     List<TransactionProduct> findTransactionProductByProductId(Long productId);
+
+    List<TransactionProduct> findByTransactionId(Long transactionId);
 } 

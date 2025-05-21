@@ -1,4 +1,4 @@
-package com.mscssd.group1.dto;
+package com.mscssd.group1.dtos;
 
 public class CredentialDto {
     private String userName;

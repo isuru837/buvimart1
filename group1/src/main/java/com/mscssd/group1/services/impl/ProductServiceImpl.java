@@ -8,16 +8,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     
     private final ProductRepository productRepository;
-
     @Autowired
     public ProductServiceImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+        this.productRepository = Objects.requireNonNull(productRepository,"Transaction repository cannot be null");
     }
 
     @Override
