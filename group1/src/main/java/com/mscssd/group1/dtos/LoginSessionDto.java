@@ -1,4 +1,4 @@
-package com.mscssd.group1.dto;
+package com.mscssd.group1.dtos;
 
 import com.mscssd.group1.models.User;
 import com.mscssd.group1.models.Token;

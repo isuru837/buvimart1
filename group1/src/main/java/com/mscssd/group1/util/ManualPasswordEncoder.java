@@ -16,4 +16,11 @@ public class ManualPasswordEncoder {
         System.out.println("\nTo verify this password later, use:");
         System.out.println("boolean matches = encoder.matches(\"" + rawPassword + "\", \"" + encodedPassword + "\");");
     }
+
+    public String encode(CharSequence rawPassword) {
+        // Simple encoding: append a salt and hash
+        String salt = "BuvisaraSuperMart2024";
+        String encodedPassword = rawPassword + salt;
+        return encodedPassword;
+    }
 } 

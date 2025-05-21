@@ -27,6 +27,10 @@ public class Product {
     @Min(value = 0, message = "Stock quantity must be greater than or equal to 0")
     private Integer stockQuantity;
     
+    @NotNull(message = "Quantity is required")
+    @Min(value = 0, message = "Quantity must be greater than or equal to 0")
+    private Integer quantity;
+    
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = false;
 
@@ -49,6 +53,10 @@ public class Product {
 
     public Integer getStockQuantity() {
         return stockQuantity;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
     }
 
     public boolean isDeleted() {
@@ -76,8 +84,27 @@ public class Product {
         this.stockQuantity = stockQuantity;
     }
 
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Product{")
+          .append("id=").append(id)
+          .append(", name='").append(name).append('\'')
+          .append(", description='").append(description).append('\'')
+          .append(", price=").append(price)
+          .append(", stockQuantity=").append(stockQuantity)
+          .append(", quantity=").append(quantity)
+          .append(", deleted=").append(deleted)
+          .append('}');
+        return sb.toString();
     }
 
     // Copy constructor
@@ -87,6 +114,7 @@ public class Product {
         this.description = other.description;
         this.price = other.price;
         this.stockQuantity = other.stockQuantity;
+        this.quantity = other.quantity;
         this.deleted = other.deleted;
     }
     public Product() {

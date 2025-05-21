@@ -42,7 +42,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-   
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
 
     /**
      * Find a user by username and password
@@ -50,19 +52,8 @@ public class UserService {
      * @param password the raw password to validate
      * @return Optional containing the user if found and password matches, empty otherwise
      */
-    public Optional<User> findUserByUserNameAndPassword(String userName, String password) {
-        System.out.println("Finding user by username and password: " + userName + " " + password);
-       
-        Optional<User> userOpt = userRepository.findUserByUserName(userName);
-        System.out.println("User found: " + userOpt.isPresent());
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            // Verify the password matches
-            if (password.equals(user.getPassword())) {
-                return Optional.of(user);
-            }
-        }
-        
-        return Optional.empty();
+    public Optional<User> findByUserNameAndPassword(String userName, String password) {
+        Optional<User> userOpt = userRepository.findByUserNameAndPassword(userName, password);
+        return userOpt;
     }
 } 

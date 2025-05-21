@@ -6,6 +6,8 @@ import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "transactions")
@@ -22,12 +24,19 @@ public class Transaction {
     @Positive(message = "Transaction value must be positive")
     private Double transactionValue;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", nullable = false)
     private User customer;
 
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = false;
+
+    @OneToMany(mappedBy = "transaction", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<TransactionProduct> transactionProducts = new ArrayList<>();
+
+    // Default constructor
+    public Transaction() {
+    }
 
     // Getters
     public Long getTransactionId() {
@@ -43,11 +52,15 @@ public class Transaction {
     }
 
     public User getCustomer() {
-        return new User(customer);
+        return customer;
     }
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public List<TransactionProduct> getTransactionProducts() {
+        return transactionProducts;
     }
 
     // Setters
@@ -64,11 +77,15 @@ public class Transaction {
     }
 
     public void setCustomer(User customer) {
-        this.customer = new User(customer);
+        this.customer = customer;
     }
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public void setTransactionProducts(List<TransactionProduct> transactionProducts) {
+        this.transactionProducts = transactionProducts;
     }
 
     // Copy constructor
@@ -76,7 +93,8 @@ public class Transaction {
         this.transactionId = other.transactionId;
         this.transactionDate = other.transactionDate;
         this.transactionValue = other.transactionValue;
-        this.customer = new User(other.customer);
+        this.customer = other.customer;
         this.deleted = other.deleted;
+        this.transactionProducts = new ArrayList<>(other.transactionProducts);
     }
 } 
