@@ -15,7 +15,7 @@ public class TransactionProduct {
     @JoinColumn(name = "transaction_id", nullable = false)
     private Transaction transaction;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
@@ -78,5 +78,19 @@ public class TransactionProduct {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("TransactionProduct{")
+          .append("id=").append(id)
+          .append(", transactionId=").append(transaction != null ? transaction.getTransactionId() : null)
+          .append(", productId=").append(product != null ? product.getId() : null)
+          .append(", quantity=").append(quantity)
+          .append(", priceAtTransaction=").append(priceAtTransaction)
+          .append(", deleted=").append(deleted)
+          .append('}');
+        return sb.toString();
     }
 } 

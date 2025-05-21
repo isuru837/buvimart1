@@ -82,4 +82,12 @@ public class TransactionProductServiceImpl implements TransactionProductService 
         return transactionProductRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Transaction product not found with ID: " + id));
     }
+
+    @Override
+    public List<TransactionProduct> findByTransactionId(Long transactionId) {
+        if (transactionId == null) {
+            throw new IllegalArgumentException("Transaction ID cannot be null");
+        }
+        return transactionProductRepository.findByTransactionTransactionIdAndDeletedFalse(transactionId);
+    }
 } 

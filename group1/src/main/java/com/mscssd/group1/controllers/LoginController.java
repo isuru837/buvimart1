@@ -1,7 +1,7 @@
 package com.mscssd.group1.controllers;
 
-import com.mscssd.group1.dto.CredentialDto;
-import com.mscssd.group1.dto.LoginSessionDto;
+import com.mscssd.group1.dtos.CredentialDto;
+import com.mscssd.group1.dtos.LoginSessionDto;
 import com.mscssd.group1.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
