@@ -1,6 +1,6 @@
 package com.mscssd.group1.models;
 
-public enum UserType {
+public enum Role {
     ADMIN,
     REG_USER
 } 

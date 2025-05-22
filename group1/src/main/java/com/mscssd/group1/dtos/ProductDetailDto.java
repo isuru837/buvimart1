@@ -20,9 +20,8 @@ public class ProductDetailDto {
     public ProductDetailDto() {}
     
     public ProductDetailDto(TransactionProduct tp) {
-        System.out.println("%%%%%%%%%%%%%%%%%%");
-        System.out.println(tp.getProduct());
-        this.productId = tp.getProduct() != null ? tp.getProduct().getId() : null;
+        
+        this.productId = tp.getProduct().getId();
         this.quantity = tp.getQuantity();
         this.priceAtTransaction = tp.getPriceAtTransaction();
         this.totalPrice = tp.getPriceAtTransaction() * tp.getQuantity();

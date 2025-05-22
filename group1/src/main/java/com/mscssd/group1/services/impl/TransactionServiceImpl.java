@@ -65,11 +65,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> findByCustomerUserId(Long userId) {
         List<Transaction> transactions = transactionRepository.findByCustomerUserIdAndDeletedFalse(userId);
-        // Ensure customer and product data is loaded
-        transactions.forEach(transaction -> {
-            transaction.getCustomer();
-            transaction.getTransactionProducts().forEach(tp -> tp.getProduct());
-        });
+       
         return transactions;
     }
 
@@ -116,11 +112,11 @@ public class TransactionServiceImpl implements TransactionService {
         // Return the complete DTO
         return new TransactionProductDto(savedTransaction, savedProducts);
     }
-
+    @SuppressWarnings("UPM_UNCALLED_PRIVATE_METHOD")
     private void updateProductQuantity(ProductDetailDto productDto) {
         Product product = productRepository.findById(productDto.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
-        product.setQuantity(product.getQuantity() - productDto.getQuantity());
+        product.setStockQuantity(product.getStockQuantity() - productDto.getQuantity());
         productRepository.save(product);
     }
 } 

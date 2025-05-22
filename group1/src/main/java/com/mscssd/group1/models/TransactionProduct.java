@@ -7,11 +7,19 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 @Table(name = "transaction_products")
 public class TransactionProduct {
+    public TransactionProduct() {
+       
+    }
+    public TransactionProduct(Product product, Transaction transaction) {
+        this.product = new Product(product);
+        this.transaction = new Transaction(transaction);
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "transaction_id", nullable = false)
     private Transaction transaction;
 
@@ -85,8 +93,8 @@ public class TransactionProduct {
         StringBuilder sb = new StringBuilder();
         sb.append("TransactionProduct{")
           .append("id=").append(id)
-          .append(", transactionId=").append(transaction != null ? transaction.getTransactionId() : null)
-          .append(", productId=").append(product != null ? product.getId() : null)
+          .append(", transactionId=").append(this.transaction.getTransactionId())
+          .append(", productId=").append(this.product.getId())
           .append(", quantity=").append(quantity)
           .append(", priceAtTransaction=").append(priceAtTransaction)
           .append(", deleted=").append(deleted)
