@@ -1,7 +1,7 @@
 package com.mscssd.group1.repositories;
 
 import com.mscssd.group1.models.User;
-import com.mscssd.group1.models.UserType;
+import com.mscssd.group1.models.Role;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUserName(String userName);
     Optional<User> findByEmail(String email);
-    Optional<User> findByMobile(String mobile);
+    Optional<User> findByMobile(String phoneNumber);
     List<User> findAll(Sort sort);
     
     // Find user by username and password
@@ -27,10 +27,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     boolean existsByUserName(String userName);
     boolean existsByEmail(String email);
-    boolean existsByMobile(String mobile);
     
     // Find only non-deleted users
-    List<User> findByDeletedFalse();
+    @Query("SELECT u FROM User u WHERE u.deleted = false")
+    List<User> findAllActive();
     
     // Custom add user method
     @Transactional
@@ -44,7 +44,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u SET u.userName = :userName, u.firstName = :firstName, " +
            "u.lastName = :lastName, u.email = :email, u.mobile = :mobile, " +
            "u.addressLine1 = :addressLine1, u.addressLine2 = :addressLine2, " +
-           "u.addressLine3 = :addressLine3, u.userType = :userType " +
+           "u.addressLine3 = :addressLine3, u.role = :role " +
            "WHERE u.userId = :id")
     void updateUser(@Param("id") Long id,
                    @Param("userName") String userName,
@@ -55,12 +55,20 @@ public interface UserRepository extends JpaRepository<User, Long> {
                    @Param("addressLine1") String addressLine1,
                    @Param("addressLine2") String addressLine2,
                    @Param("addressLine3") String addressLine3,
-                   @Param("userType") UserType userType);
+                   @Param("role") Role role);
     
     // Soft delete method
     @Transactional
     @Modifying
     @Query("UPDATE User u SET u.deleted = true WHERE u.userId = :id")
     void deleteUser(@Param("id") Long id);
-    Optional<User> findUserByUserName(String userName);
+    
+    @Query("SELECT u FROM User u WHERE u.role = :role AND u.deleted = false")
+    List<User> findByRole(@Param("role") Role role);
+    
+    @Query("SELECT u FROM User u WHERE u.role = :role")
+    List<User> findByRoleIncludingDeleted(@Param("role") Role role);
+    
+    @Query("SELECT u FROM User u WHERE u.userName LIKE %:keyword% OR u.email LIKE %:keyword% OR u.mobile LIKE %:keyword%")
+    List<User> searchUsers(@Param("keyword") String keyword);
 } 

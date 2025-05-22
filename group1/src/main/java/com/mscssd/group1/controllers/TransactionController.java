@@ -17,15 +17,10 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController extends BaseController {
-
-    private final TransactionService transactionService;
-    private final TransactionProductService transactionProductService;
-
     @Autowired
-    public TransactionController(TransactionService transactionService, TransactionProductService transactionProductService) {
-        this.transactionService = transactionService;
-        this.transactionProductService = transactionProductService;
-    }
+     TransactionService transactionService;
+    @Autowired
+    TransactionProductService transactionProductService;
 
     @GetMapping
     public ResponseEntity<List<Transaction>> getAllTransactions() {

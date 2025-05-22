@@ -39,7 +39,7 @@ public class ProductController extends BaseController {
         return ResponseEntity.ok(savedProduct);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("update/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         if (!productService.findById(id).isPresent()) {
             return ResponseEntity.notFound().build();

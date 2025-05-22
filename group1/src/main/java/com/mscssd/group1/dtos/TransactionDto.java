@@ -39,8 +39,8 @@ public class TransactionDto {
         
         User customer = transaction.getCustomer();
         System.out.println("Customer in TransactionDto: " + customer);
-        this.customerId = customer != null ? customer.getUserId() : null;
-        this.customerName = customer != null ? customer.getUserName() : null;
+        this.customerId = customer.getUserId() ;
+        this.customerName = customer.getUserName();
         
         this.products = new ArrayList<>();
         

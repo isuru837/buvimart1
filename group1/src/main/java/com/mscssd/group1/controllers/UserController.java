@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.mscssd.group1.dtos.UserDto;
 import com.mscssd.group1.models.User;
 import com.mscssd.group1.services.UserService;
 
@@ -19,8 +20,9 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.createUser(user);
+    public ResponseEntity<User> createUser(@RequestBody UserDto user) {
+        System.out.println("registering users "+user.toString());
+        User createdUser = userService.createUser(user.toEntity());
         return ResponseEntity.ok(createdUser);
     }
 
