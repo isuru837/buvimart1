@@ -37,7 +37,9 @@ public class TokenInterceptor implements HandlerInterceptor {
             // If token is invalid and refresh token is provided, try to refresh
             if (refreshToken != null && tokenManager.verifyToken(refreshToken)) {
                 String username = tokenManager.getUsernameFromToken(refreshToken);
-                String newToken = tokenManager.generateNewToken(username).getJwToken();
+                String role = tokenManager.extractRole(refreshToken);
+                String userId = tokenManager.extractUserId(refreshToken);
+                String newToken = tokenManager.generateNewToken(username,role,userId).getJwToken();
                 response.setHeader("New-Access-Token", newToken);
                 return true;
             }

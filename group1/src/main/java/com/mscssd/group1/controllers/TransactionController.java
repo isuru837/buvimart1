@@ -41,8 +41,6 @@ public class TransactionController extends BaseController {
         List<TransactionDto> transactionDtos = transactions.stream()
             .map(transaction -> {
                 List<TransactionProduct> products = transactionProductService.findByTransactionId(transaction.getTransactionId());
-                System.out.println("####################");
-                System.out.println(products);
                 return new TransactionDto(transaction, products);
             })
             .collect(Collectors.toList());
@@ -55,9 +53,5 @@ public class TransactionController extends BaseController {
         return ResponseEntity.ok(savedTransaction);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        transactionService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+  
 } 

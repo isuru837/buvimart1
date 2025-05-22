@@ -1,9 +1,14 @@
 package com.mscssd.group1.controllers;
 
+import com.mscssd.group1.dtos.ProductDto;
 import com.mscssd.group1.models.Product;
+import com.mscssd.group1.models.Role;
 import com.mscssd.group1.services.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,27 +39,23 @@ public class ProductController extends BaseController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        Product savedProduct = productService.save(product);
-        return ResponseEntity.ok(savedProduct);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Product> addProduct(@Valid @RequestBody ProductDto productDto) {
+        Product savedProduct = productService.save(productDto.toEntity());
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        if (!productService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        product.setId(id);
-        Product updatedProduct = productService.save(product);
-        return ResponseEntity.ok(updatedProduct);
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
+        return productService.findById(id)
+                .map(existingProduct -> {
+                    Product product = productDto.toEntity();
+                    product.setId(id);
+                    return ResponseEntity.ok(productService.save(product));
+                })
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        if (!productService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build();
-        }
-        productService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
+   
 } 
