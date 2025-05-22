@@ -52,7 +52,7 @@ public class Transaction {
     }
 
     public User getCustomer() {
-        return customer;
+        return new User(customer);
     }
 
     public boolean isDeleted() {
@@ -60,7 +60,7 @@ public class Transaction {
     }
 
     public List<TransactionProduct> getTransactionProducts() {
-        return transactionProducts;
+        return new ArrayList<TransactionProduct>(transactionProducts);
     }
 
     // Setters
@@ -77,7 +77,7 @@ public class Transaction {
     }
 
     public void setCustomer(User customer) {
-        this.customer = customer;
+        this.customer = new User(customer);
     }
 
     public void setDeleted(boolean deleted) {
@@ -85,7 +85,7 @@ public class Transaction {
     }
 
     public void setTransactionProducts(List<TransactionProduct> transactionProducts) {
-        this.transactionProducts = transactionProducts;
+        this.transactionProducts = new ArrayList<TransactionProduct>(transactionProducts);
     }
 
     // Copy constructor

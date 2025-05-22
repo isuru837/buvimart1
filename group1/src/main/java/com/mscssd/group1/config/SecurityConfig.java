@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .requestMatchers(new AntPathRequestMatcher("/api/products/add")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/api/transactions/create")).permitAll()
                 .requestMatchers(new AntPathRequestMatcher("/api/transactions/customer/{userId}")).permitAll()
+                .requestMatchers(new AntPathRequestMatcher("/api/products/update/{id}")).permitAll()
                 .anyRequest().authenticated()
             )
             .headers(headers -> headers.frameOptions().disable()) // For H2 console
