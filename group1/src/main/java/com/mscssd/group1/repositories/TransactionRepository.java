@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,4 +35,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Modifying
     @Query("UPDATE Transaction t SET t.deleted = true WHERE t.transactionId = :id")
     void deleteTransaction(@Param("id") Long id);
+
+    List<Transaction> findByTransactionDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<Transaction> findByTransactionProductsProductId(Long productId);
 } 
