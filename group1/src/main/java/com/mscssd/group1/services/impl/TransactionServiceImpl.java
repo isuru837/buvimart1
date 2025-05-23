@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+@Service("transactionService")
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;

@@ -11,4 +11,11 @@ public interface LoginService {
      * @throws RuntimeException if authentication fails
      */
     LoginSessionDto login(CredentialDto credentials);
+
+    /**
+     * Invalidates the refresh token to log out the user
+     * @param refreshToken The refresh token to invalidate
+     * @throws RuntimeException if logout fails
+     */
+    void logout(String refreshToken);
 } 

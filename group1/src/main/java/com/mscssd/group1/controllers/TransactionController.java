@@ -2,28 +2,45 @@ package com.mscssd.group1.controllers;
 
 import com.mscssd.group1.dtos.TransactionProductDto;
 import com.mscssd.group1.dtos.TransactionDto;
+import com.mscssd.group1.exceptions.TokenExpiredException;
 import com.mscssd.group1.models.Transaction;
 import com.mscssd.group1.models.TransactionProduct;
 import com.mscssd.group1.services.TransactionService;
 import com.mscssd.group1.services.TransactionProductService;
+import com.mscssd.group1.util.TokenManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController extends BaseController {
+    
+    private final TransactionService transactionService;
+    private final TransactionProductService transactionProductService;
+    private final TokenManager tokenManager;
+    
     @Autowired
-    TransactionService transactionService;
-    @Autowired
-    TransactionProductService transactionProductService;
+    public TransactionController(
+            @Qualifier("transactionService") TransactionService transactionService, 
+            @Qualifier("transactionProductService") TransactionProductService transactionProductService,
+            @Qualifier("tokenManager") TokenManager tokenManager) {
+        // Create defensive copies of the services
+        this.transactionService = Objects.requireNonNull(transactionService, "Transaction service cannot be null");
+        this.transactionProductService = Objects.requireNonNull(transactionProductService, "Transaction product service cannot be null");
+        this.tokenManager = Objects.requireNonNull(tokenManager, "Token manager cannot be null");
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -47,15 +64,35 @@ public class TransactionController extends BaseController {
 
     @GetMapping("/customer/{userId}")
     @PreAuthorize("hasRole('REG_USER')")
-    public ResponseEntity<List<TransactionDto>> getTransactionsByCustomer(@PathVariable Long userId) {
-        List<Transaction> transactions = transactionService.findByCustomerUserId(userId);
-        List<TransactionDto> transactionDtos = transactions.stream()
-            .map(transaction -> {
-                List<TransactionProduct> products = transactionProductService.findByTransactionId(transaction.getTransactionId());
-                return new TransactionDto(transaction, products);
-            })
-            .collect(Collectors.toList());
-        return ResponseEntity.ok(transactionDtos);
+    public ResponseEntity<?> getTransactionsByCustomer(@PathVariable Long userId, HttpServletRequest request) {
+        // Get the token from the Authorization header
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Missing or invalid Authorization header");
+        }
+
+        try {
+            // Extract the token and get the user ID
+            String token = authHeader.substring(7);
+            String userIdFromToken = tokenManager.extractUserId(token);
+            
+            if (userIdFromToken == null || !userIdFromToken.equals(userId.toString())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only view your own transactions");
+            }
+
+            List<Transaction> transactions = transactionService.findByCustomerUserId(userId);
+            List<TransactionDto> transactionDtos = transactions.stream()
+                .map(transaction -> {
+                    List<TransactionProduct> products = transactionProductService.findByTransactionId(transaction.getTransactionId());
+                    return new TransactionDto(transaction, products);
+                })
+                .collect(Collectors.toList());
+            return ResponseEntity.ok(transactionDtos);
+        } catch (TokenExpiredException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Access token is expired");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
     }
 
     @PostMapping("/create")
