@@ -61,7 +61,7 @@ public class LoginController {
             return ResponseEntity.ok(newTokens);
         } catch (TokenExpiredException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token is expired");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
         }
     }
