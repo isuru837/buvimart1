@@ -7,13 +7,291 @@
 	},
 	"item": [
 		{
+			"name": "AdminOnly",
+			"item": [
+				{
+					"name": "addProduct",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXBBZG1pbiIsImlhdCI6MTc0NjgwMzYyMCwiZXhwIjoxNzQ2ODA3MjIwfQ.V0i-aBhu_mMLEkjJXM535pcOyH4-9Tp-4KfyXG9wI6I",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Product8\",\r\n    \"description\": \"Product Description8\",\r\n    \"price\": 230.00,\r\n    \"stockQuantity\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/api/products/add",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"products",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateProduct",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Product9\",\r\n    \"description\": \"Product Description9\",\r\n    \"price\": 350.00,\r\n    \"stockQuantity\": 100,\r\n    \"deleted\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/api/products/update/9",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"products",
+								"update",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllTransaction",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/api/transactions",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reg_UserOnly",
+			"item": [
+				{
+					"name": "getTransactionsByCustomerId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionId\": 1,\r\n    \"transactionDate\": \"2024-03-20T14:30:00\",\r\n    \"transactionValue\": 25.00,\r\n    \"customerId\": 7,\r\n    \"customerName\": \"John Doe\",\r\n    \"products\": [\r\n         {\r\n        \"productId\": 1,\r\n        \"priceAtTransaction\": 10.00,\r\n        \"quantity\": 1,\r\n        \"totalPrice\": 25.00\r\n        \r\n    },\r\n    {\r\n        \"productId\": 2,\r\n        \"priceAtTransaction\": 15.00,\r\n        \"quantity\": 1,\r\n        \"totalPrice\": 25.00\r\n    }\r\n    \r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/api/transactions/customer/10",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"transactions",
+								"customer",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "createTransaction",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"transactionId\": 1,\r\n    \"transactionDate\": \"2024-05-23T12:30:00\",\r\n    \"transactionValue\": 25.00,\r\n    \"customerId\": 10,\r\n    \"customerName\": \"Amila Nilan\",\r\n    \"products\": [\r\n         {\r\n        \"productId\": 1,\r\n        \"priceAtTransaction\": 10.00,\r\n        \"quantity\": 1,\r\n        \"totalPrice\": 25.00\r\n        \r\n    },\r\n    {\r\n        \"productId\": 2,\r\n        \"priceAtTransaction\": 15.00,\r\n        \"quantity\": 1,\r\n        \"totalPrice\": 25.00\r\n    }\r\n    ,\r\n    {\r\n        \"productId\": 2,\r\n        \"priceAtTransaction\": 15.00,\r\n        \"quantity\": 1,\r\n        \"totalPrice\": 25.00\r\n    }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/api/transactions/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"transactions",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{jwToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \r\n  \"userName\": \"amila\",\r\n  \"password\": \"456789\",\r\n  \"firstName\": \"Amila\",\r\n  \"lastName\": \"Nilan\",\r\n  \"addressLine1\": \"123\",\r\n  \"addressLine2\": \"Boralasgamuwar Road\",\r\n  \"addressLine3\": \"Maharagama\",\r\n  \"email\": \"amila@gmail.com\",\r\n  \"mobile\": \"0701722100\",\r\n  \"role\": \"REG_USER\",\r\n  \"deleted\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8085/api/users/update/10",
+							"host": [
+								"localhost"
+							],
+							"port": "8085",
+							"path": [
+								"api",
+								"users",
+								"update",
+								"10"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"// Get the jwToken value and assign it to a collection variable\r",
+							"pm.collectionVariables.set(\"jwToken\", response.token.jwToken);\r",
+							"pm.collectionVariables.set(\"refreshToken\", response.token.refreshToken);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"userName\":\"SupAdmin\",\r\n    \"password\":\"123456\"\r\n}",
+					"raw": "{\r\n    \"userName\":\"amila\",\r\n    \"password\":\"456789\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -36,13 +314,58 @@
 			"response": []
 		},
 		{
+			"name": "logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Refresh-Token",
+						"value": "{{refreshToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/api/auth/logout",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"auth",
+						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "createUser",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwToken}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \r\n  \"userName\": \"SupAdmin1\",\r\n  \"password\": \"123456\",\r\n  \"firstName\": \"Super\",\r\n  \"lastName\": \"Admin\",\r\n  \"addressLine1\": \"System1\",\r\n  \"addressLine2\": \"System1\",\r\n  \"addressLine3\": \"System1\",\r\n  \"email\": \"laskum123@gmail.com\",\r\n  \"mobile\": \"0701722860\",\r\n  \"userType\": \"ADMIN\",\r\n  \"deleted\": false\r\n}",
+					"raw": "{\r\n  \r\n  \"userName\": \"Inula\",\r\n  \"password\": \"123456\",\r\n  \"firstName\": \"Inula\",\r\n  \"lastName\": \"Kithman\",\r\n  \"addressLine1\": \"13\",\r\n  \"addressLine2\": \"Godagama Road\",\r\n  \"addressLine3\": \"Mathara\",\r\n  \"email\": \"inula@gmail.com\",\r\n  \"mobile\": \"0701722105\",\r\n  \"role\": \"REG_USER\",\r\n  \"deleted\": false\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -65,52 +388,6 @@
 			"response": []
 		},
 		{
-			"name": "addProduct",
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXBBZG1pbiIsImlhdCI6MTc0NjgwODUxMSwiZXhwIjoxNzQ2ODEyMTExfQ.x5rWClcYpLdvALgXoXubowYT02qfZA3PVJn9RhPt5c4",
-							"type": "string"
-						}
-					]
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXBBZG1pbiIsImlhdCI6MTc0NjgwMzYyMCwiZXhwIjoxNzQ2ODA3MjIwfQ.V0i-aBhu_mMLEkjJXM535pcOyH4-9Tp-4KfyXG9wI6I",
-						"type": "text",
-						"disabled": true
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"name\": \"Product1\",\r\n    \"description\": \"Product Description1\",\r\n    \"price\": 102.99,\r\n    \"stockQuantity\": 1000\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8085/api/products/add",
-					"host": [
-						"localhost"
-					],
-					"port": "8085",
-					"path": [
-						"api",
-						"products",
-						"add"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "getAllProducts",
 			"request": {
 				"auth": {
@@ -118,7 +395,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTdXBBZG1pbiIsImlhdCI6MTc0NjgwODUxMSwiZXhwIjoxNzQ2ODEyMTExfQ.x5rWClcYpLdvALgXoXubowYT02qfZA3PVJn9RhPt5c4",
+							"value": "{{jwToken}}",
 							"type": "string"
 						}
 					]
@@ -139,6 +416,91 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "refresh",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse the response body\r",
+							"let response = pm.response.json();\r",
+							"\r",
+							"// Get the jwToken value and assign it to a collection variable\r",
+							"pm.collectionVariables.set(\"jwToken\", response.jwToken);\r",
+							"pm.collectionVariables.set(\"refreshToken\", response.refreshToken);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Refresh-token",
+						"value": "{{refreshToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"jwToken\": \"new-access-token\",\r\n    \"refreshToken\": \"new-refresh-token\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8085/api/auth/refresh",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"api",
+						"auth",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jwToken",
+			"value": ""
+		},
+		{
+			"key": "refreshToken",
+			"value": "",
+			"type": "default"
 		}
 	]
 }
