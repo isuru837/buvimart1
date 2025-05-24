@@ -15,12 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
-@Service
+@Service("transactionService")
 public class TransactionServiceImpl implements TransactionService {
 
     private final TransactionRepository transactionRepository;
@@ -72,6 +74,46 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> findByCustomerUserIdAndDeletedFalse(Long userId) {
         return findByCustomerUserId(userId);
+    }
+
+    @Override
+    public List<Transaction> findByDateRange(LocalDate startDate, LocalDate endDate) {
+        return transactionRepository.findByTransactionDateBetween(startDate.atStartOfDay(), endDate.atTime(23, 59, 59));
+    }
+
+    @Override
+    public List<Transaction> findByProductId(Long productId) {
+        return transactionRepository.findByTransactionProductsProductId(productId);
+    }
+
+    @Override
+    public List<Transaction> findTransactionsWithFilters(LocalDate startDate, LocalDate endDate, Long customerId, Long productId) {
+        List<Transaction> transactions = transactionRepository.findByDeletedFalse();
+        
+        // Apply date filter if both dates are provided
+        if (startDate != null && endDate != null) {
+            transactions = transactions.stream()
+                .filter(t -> !t.getTransactionDate().toLocalDate().isBefore(startDate) 
+                    && !t.getTransactionDate().toLocalDate().isAfter(endDate))
+                .collect(Collectors.toList());
+        }
+        
+        // Apply customer filter if provided
+        if (customerId != null) {
+            transactions = transactions.stream()
+                .filter(t -> t.getCustomer().getUserId().equals(customerId))
+                .collect(Collectors.toList());
+        }
+        
+        // Apply product filter if provided
+        if (productId != null) {
+            transactions = transactions.stream()
+                .filter(t -> t.getTransactionProducts().stream()
+                    .anyMatch(tp -> tp.getProduct().getId().equals(productId)))
+                .collect(Collectors.toList());
+        }
+        
+        return transactions;
     }
 
     @Override

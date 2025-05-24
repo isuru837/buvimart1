@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 
-@Service
+@Service("transactionProductService")
 public class TransactionProductServiceImpl implements TransactionProductService {
 
     private TransactionProductRepository transactionProductRepository = null;

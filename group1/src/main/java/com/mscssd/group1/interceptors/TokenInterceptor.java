@@ -1,5 +1,6 @@
 package com.mscssd.group1.interceptors;
 
+import com.mscssd.group1.exceptions.TokenExpiredException;
 import com.mscssd.group1.util.TokenManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,23 +33,34 @@ public class TokenInterceptor implements HandlerInterceptor {
         String token = authHeader.substring(7); // Remove "Bearer " prefix
         String refreshToken = request.getHeader("Refresh-Token");
 
-        // Verify the token
-        if (!tokenManager.verifyToken(token)) {
-            // If token is invalid and refresh token is provided, try to refresh
-            if (refreshToken != null && tokenManager.verifyToken(refreshToken)) {
-                String username = tokenManager.getUsernameFromToken(refreshToken);
-                String role = tokenManager.extractRole(refreshToken);
-                String userId = tokenManager.extractUserId(refreshToken);
-                String newToken = tokenManager.generateNewToken(username,role,userId).getJwToken();
-                response.setHeader("New-Access-Token", newToken);
-                return true;
+        try {
+            // Verify the token
+            tokenManager.verifyToken(token);
+            return true;
+        } catch (TokenExpiredException e) {
+            // If token is expired and refresh token is provided, try to refresh
+            if (refreshToken != null) {
+                try {
+                    tokenManager.verifyToken(refreshToken);
+                    String username = tokenManager.getUsernameFromToken(refreshToken);
+                    String role = tokenManager.extractRole(refreshToken);
+                    String userId = tokenManager.extractUserId(refreshToken);
+                    String newToken = tokenManager.generateNewToken(username, role, userId).getJwToken();
+                    response.setHeader("New-Access-Token", newToken);
+                    return true;
+                } catch (Exception ex) {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    response.getWriter().write("Access token is expired");
+                    return false;
+                }
             }
-            
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.getWriter().write("Invalid or expired token");
+            response.getWriter().write("Access token is expired");
+            return false;
+        } catch (Exception e) {
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+            response.getWriter().write("Invalid token");
             return false;
         }
-
-        return true;
     }
 } 
