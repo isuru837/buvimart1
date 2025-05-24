@@ -17,6 +17,8 @@ public class ProductDetailDto {
     
     private Double totalPrice;
     
+    private double price;
+    
     public ProductDetailDto() {}
     
     public ProductDetailDto(TransactionProduct tp) {
@@ -60,6 +62,14 @@ public class ProductDetailDto {
         this.totalPrice = totalPrice;
     }
     
+    public double getPrice() {
+        return price;
+    }
+    
+    public void setPrice(double price) {
+        this.price = price;
+    }
+    
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -68,6 +78,7 @@ public class ProductDetailDto {
           .append(", quantity=").append(quantity)
           .append(", priceAtTransaction=").append(priceAtTransaction)
           .append(", totalPrice=").append(totalPrice)
+          .append(", price=").append(price)
           .append('}');
         return sb.toString();
     }

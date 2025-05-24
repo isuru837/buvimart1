@@ -67,6 +67,7 @@ public class TokenManager {
     }
 
     public Claims verifyToken(String token) {
+        System.out.println("Token is : "+token);
         try {
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
@@ -81,6 +82,7 @@ public class TokenManager {
             
             return claims;
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             if (e instanceof TokenExpiredException) {
                 throw (TokenExpiredException) e;
             }
