@@ -35,11 +35,11 @@ public class RefreshToken {
     }
 
     public User getUser() {
-        return user;
+        return user != null ? new User(user) : null;
     }
 
     public void setUser(User user) {
-        this.user = user;
+        this.user = user != null ? new User(user) : null;
     }
 
     public String getToken() {

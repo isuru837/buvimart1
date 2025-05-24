@@ -97,7 +97,26 @@ public class TransactionController extends BaseController {
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('REG_USER')")
-    public ResponseEntity<TransactionProductDto> createTransaction(@RequestBody TransactionProductDto transactionDto) {
+    public ResponseEntity<TransactionProductDto> createTransaction(@RequestBody TransactionProductDto transactionDto, HttpServletRequest request) {
+        System.out.println(transactionDto);
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        String token = authHeader.substring(7);
+        String userIdFromToken = tokenManager.extractUserId(token);
+        
+        if (!userIdFromToken.equals(transactionDto.getCustomerId().toString())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+
+        // Calculate total amount from products
+        double totalAmount = transactionDto.getProducts().stream()
+            .mapToDouble(product -> product.getPrice() * product.getQuantity())
+            .sum();
+        transactionDto.setTotalAmount(totalAmount);
+
         TransactionProductDto savedTransaction = transactionService.saveTransactionWithProducts(transactionDto);
         return ResponseEntity.ok(savedTransaction);
     }

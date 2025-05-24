@@ -25,6 +25,7 @@ public class TransactionProductDto {
     private Long customerId;
     
     private String customerName;
+    private double totalAmount;
     private List<ProductDetailDto> products;
     
     // Default constructor
@@ -87,6 +88,14 @@ public class TransactionProductDto {
     
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+    
+    public double getTotalAmount() {
+        return totalAmount;
+    }
+    
+    public void setTotalAmount(double totalAmount) {
+        this.totalAmount = totalAmount;
     }
     
     public List<ProductDetailDto> getProducts() {
