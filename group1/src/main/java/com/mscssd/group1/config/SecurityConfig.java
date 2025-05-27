@@ -26,6 +26,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthFilter) throws Exception {
         http
@@ -33,6 +34,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/users/register").permitAll()
                 .requestMatchers("/api/products/all", "/api/products/{id}").permitAll()
                 .requestMatchers("/api/products/add", "/api/products/{id}").hasRole("ADMIN")
                 .requestMatchers("/api/transactions/create").authenticated()

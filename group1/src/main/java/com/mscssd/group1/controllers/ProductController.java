@@ -2,7 +2,6 @@ package com.mscssd.group1.controllers;
 
 import com.mscssd.group1.dtos.ProductDto;
 import com.mscssd.group1.models.Product;
-import com.mscssd.group1.models.Role;
 import com.mscssd.group1.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

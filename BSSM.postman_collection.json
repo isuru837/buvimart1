@@ -242,7 +242,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \r\n  \"userName\": \"amila\",\r\n  \"password\": \"456789\",\r\n  \"firstName\": \"Amila\",\r\n  \"lastName\": \"Nilan\",\r\n  \"addressLine1\": \"123\",\r\n  \"addressLine2\": \"Boralasgamuwar Road\",\r\n  \"addressLine3\": \"Maharagama\",\r\n  \"email\": \"amila@gmail.com\",\r\n  \"mobile\": \"0701722100\",\r\n  \"role\": \"REG_USER\",\r\n  \"deleted\": false\r\n}",
+							"raw": "{\r\n  \r\n  \"userName\": \"amila\",\r\n  \"password\": \"456789\",\r\n  \"firstName\": \"Amilaruwan\",\r\n  \"lastName\": \"Nilan\",\r\n  \"addressLine1\": \"123\",\r\n  \"addressLine2\": \"Boralasgamuwar Road\",\r\n  \"addressLine3\": \"Maharagama\",\r\n  \"email\": \"amila@gmail.com\",\r\n  \"mobile\": \"0701722100\",\r\n  \"role\": \"REG_USER\",\r\n  \"deleted\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -365,7 +365,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \r\n  \"userName\": \"Inula\",\r\n  \"password\": \"123456\",\r\n  \"firstName\": \"Inula\",\r\n  \"lastName\": \"Kithman\",\r\n  \"addressLine1\": \"13\",\r\n  \"addressLine2\": \"Godagama Road\",\r\n  \"addressLine3\": \"Mathara\",\r\n  \"email\": \"inula@gmail.com\",\r\n  \"mobile\": \"0701722105\",\r\n  \"role\": \"REG_USER\",\r\n  \"deleted\": false\r\n}",
+					"raw": "{\r\n  \r\n  \"userName\": \"Desandu\",\r\n  \"password\": \"2021315\",\r\n  \"firstName\": \"Desandu\",\r\n  \"lastName\": \"Methman\",\r\n  \"addressLine1\": \"13\",\r\n  \"addressLine2\": \"Weragala\",\r\n  \"addressLine3\": \"Padukka\",\r\n  \"email\": \"desandu@gmail.com\",\r\n  \"mobile\": \"0711722105\",\r\n  \"role\": \"REG_USER\",\r\n  \"deleted\": false\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
