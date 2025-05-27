@@ -47,18 +47,4 @@ public class LoginServiceImpl implements LoginService {
         }
     }
 
-    @Override
-    public void logout(String refreshToken) {
-        if (refreshToken == null || refreshToken.isEmpty()) {
-            throw new RuntimeException("Refresh token is required");
-        }
-
-        try {
-            // Verify the refresh token is valid before invalidating
-            tokenManager.verifyToken(refreshToken);
-           
-        } catch (Exception e) {
-            throw new RuntimeException("Invalid refresh token");
-        }
-    }
 } 

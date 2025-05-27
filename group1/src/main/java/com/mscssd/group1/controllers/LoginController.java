@@ -21,11 +21,6 @@ public class LoginController {
         return ResponseEntity.ok(loginSession);
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestHeader("Refresh-Token") String refreshToken) {
-        loginService.logout(refreshToken);
-        return ResponseEntity.ok("Logged out successfully");
-    }
 
    
 } 
