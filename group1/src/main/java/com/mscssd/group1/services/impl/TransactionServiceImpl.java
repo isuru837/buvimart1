@@ -124,6 +124,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setTransactionDate(transactionDto.getTransactionDate());
         transaction.setTransactionValue(transactionDto.getTransactionValue());
         
+        
         // Set customer
         User customer = userService.findById(transactionDto.getCustomerId())
                 .orElseThrow(() -> new IllegalArgumentException("Customer not found with ID: " + transactionDto.getCustomerId()));

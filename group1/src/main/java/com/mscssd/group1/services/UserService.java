@@ -29,6 +29,7 @@ public class UserService {
         // Hash the password before saving
         String hashedPassword = Encoder.encodePassword(user.getPassword());
         user.setPassword(hashedPassword);
+        System.out.println("############# : "+user);
         return userRepository.save(user);
     }
 
