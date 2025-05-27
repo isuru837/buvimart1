@@ -38,9 +38,7 @@ public class LoginServiceImpl implements LoginService {
             System.out.println("Role Of User : "+authenticatedUser.getRole().name());
             Token tokens = tokenManager.generateNewToken(authenticatedUser.getUserName(),authenticatedUser.getRole().name(),authenticatedUser.getUserId().toString());
             
-            // Save refresh token to database
-            tokenManager.saveRefreshToken(tokens.getRefreshToken(), authenticatedUser);
-            
+       
             // Create login session with current timestamp
             String loginTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
             return new LoginSessionDto(authenticatedUser, tokens, loginTime);
@@ -58,8 +56,7 @@ public class LoginServiceImpl implements LoginService {
         try {
             // Verify the refresh token is valid before invalidating
             tokenManager.verifyToken(refreshToken);
-            // Invalidate the refresh token
-            tokenManager.invalidateToken(refreshToken);
+           
         } catch (Exception e) {
             throw new RuntimeException("Invalid refresh token");
         }
