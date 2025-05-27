@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Table(name = "users")
@@ -56,6 +57,7 @@ public class User {
     private String mobile;
 
     @Column(name = "is_deleted", nullable = false)
+    @ColumnDefault("false")
     private boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
@@ -153,6 +155,7 @@ public class User {
     }
 
     public void setDeleted(boolean deleted) {
+        System.out.println("############# : "+deleted);
         this.deleted = deleted;
     }
 
@@ -175,7 +178,25 @@ public class User {
         this.deleted = other.deleted;
         this.role = other.role;
     }
+
     public User() {
         
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", userName='" + userName + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", addressLine1='" + addressLine1 + '\'' +
+                ", addressLine2='" + addressLine2 + '\'' +
+                ", addressLine3='" + addressLine3 + '\'' +
+                ", deleted=" + deleted +
+                ", role=" + role +
+                '}';
     }
 } 

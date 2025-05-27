@@ -44,6 +44,7 @@ public class UserDto {
     private String mobile;
 
     private Role role;
+    private boolean deleted;
 
     // Default constructor
     public UserDto() {
@@ -61,6 +62,7 @@ public class UserDto {
         this.email = user.getEmail();
         this.mobile = user.getMobile();
         this.role = user.getRole();
+        this.deleted = user.isDeleted();
     }
 
     // Getters and Setters
@@ -152,6 +154,14 @@ public class UserDto {
         this.role = role;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     // Convert to User entity
     public User toEntity() {
         User user = new User();
@@ -166,6 +176,7 @@ public class UserDto {
         user.setEmail(this.email);
         user.setMobile(this.mobile);
         user.setRole(this.role);
+        user.setDeleted(this.deleted);
         return user;
     }
 
@@ -179,6 +190,7 @@ public class UserDto {
                 ", email='" + email + '\'' +
                 ", mobile='" + mobile + '\'' +
                 ", role=" + role +
+                ", deleted=" + deleted +
                 '}';
     }
 } 
