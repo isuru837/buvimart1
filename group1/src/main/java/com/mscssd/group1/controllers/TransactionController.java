@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -44,14 +45,19 @@ public class TransactionController extends BaseController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<Transaction>> getAllTransactions(
+    public ResponseEntity<?> getAllTransactions(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
             @RequestParam(required = false) Long customerId,
             @RequestParam(required = false) Long productId) {
-        
-        List<Transaction> transactions = transactionService.findTransactionsWithFilters(startDate, endDate, customerId, productId);
-        return ResponseEntity.ok(transactions);
+        try {
+            List<Transaction> transactions = transactionService.findTransactionsWithFilters(startDate, endDate, customerId, productId);
+            return ResponseEntity.ok(transactions);
+        } catch (AccessDeniedException e) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("Access denied: Only administrators can view all transactions");
+        }
     }
 
     @GetMapping("/{id}")
