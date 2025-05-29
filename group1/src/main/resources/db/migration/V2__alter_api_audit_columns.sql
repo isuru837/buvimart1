@@ -1,0 +1,2 @@
+ALTER TABLE api_audit MODIFY COLUMN request_body TEXT NOT NULL;
+ALTER TABLE api_audit MODIFY COLUMN response_body TEXT NOT NULL; 
