@@ -1,5 +1,7 @@
 package com.mscssd.group1.controllers;
 
+import com.mscssd.group1.dto.TransactionDTO;
+import com.mscssd.group1.dto.TransactionProductDTO;
 import com.mscssd.group1.dtos.TransactionProductDto;
 import com.mscssd.group1.dtos.TransactionDto;
 import com.mscssd.group1.exceptions.TokenExpiredException;
@@ -52,7 +54,28 @@ public class TransactionController extends BaseController {
             @RequestParam(required = false) Long productId) {
         try {
             List<Transaction> transactions = transactionService.findTransactionsWithFilters(startDate, endDate, customerId, productId);
-            return ResponseEntity.ok(transactions);
+            
+            List<TransactionDTO> transactionDTOs = transactions.stream()
+                .map(transaction -> {
+                    List<TransactionProductDTO> productDTOs = transaction.getTransactionProducts().stream()
+                        .map(tp -> new TransactionProductDTO(
+                            transaction.getTransactionId(),
+                            tp.getProduct().getId(),
+                            tp.getProduct().getName()
+                        ))
+                        .collect(Collectors.toList());
+
+                    return new TransactionDTO(
+                        transaction.getTransactionId(),
+                        transaction.getTransactionDate(),
+                        transaction.getCustomer().getUserId(),
+                        transaction.getCustomer().getFirstName() + " " + transaction.getCustomer().getLastName(),
+                        productDTOs
+                    );
+                })
+                .collect(Collectors.toList());
+
+            return ResponseEntity.ok(transactionDTOs);
         } catch (AccessDeniedException e) {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
