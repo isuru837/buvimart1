@@ -35,7 +35,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/users/register").permitAll()
-                .requestMatchers("/api/products/all", "/api/products/{id}").permitAll()
+                .requestMatchers("/api/products/all").permitAll()
                 .requestMatchers("/api/products/add", "/api/products/{id}").hasRole("ADMIN")
                 .requestMatchers("/api/transactions/create").authenticated()
                 .requestMatchers("/api/transactions/customer/{userId}").authenticated()
