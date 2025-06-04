@@ -4,10 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mscssd.group1.services.ApiAuditService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,8 +15,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 @Component
 public class ApiAuditInterceptor implements HandlerInterceptor {
+    private static final Logger logger = LoggerFactory.getLogger(ApiAuditInterceptor.class);
 
     @Autowired
     private ApiAuditService apiAuditService;
@@ -60,11 +62,13 @@ public class ApiAuditInterceptor implements HandlerInterceptor {
                 .body(responseBody.isEmpty() ? null : objectMapper.readValue(responseBody, Object.class));
 
             apiAuditService.logApiCall(request, responseEntity, username);
+        } catch (IOException e) {
+            logger.error("Failed to read response body during API audit", e);
         } catch (Exception e) {
-            // Log the error but don't throw it
-            e.printStackTrace();
+            logger.error("Unexpected error during API audit", e);
         }
     }
+
     public String getRequestBody(HttpServletRequest request) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader reader = request.getReader();

@@ -13,6 +13,8 @@ import com.mscssd.group1.dtos.UserDto;
 import com.mscssd.group1.models.User;
 import com.mscssd.group1.services.UserService;
 import com.mscssd.group1.util.TokenManager;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,18 +22,33 @@ public class UserController extends BaseController {
     
     private final UserService userService;
     private final TokenManager tokenManager;
+    private final RateLimiterRegistry rateLimiterRegistry;
 
     @Autowired
-    public UserController(UserService userService, TokenManager tokenManager) {
+    public UserController(UserService userService, TokenManager tokenManager, RateLimiterRegistry rateLimiterRegistry) {
         this.userService = userService;
         this.tokenManager = tokenManager;
+        this.rateLimiterRegistry = rateLimiterRegistry;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> createUser(@RequestBody UserDto user) {
-        System.out.println("registering users "+user.toString());
-        User createdUser = userService.createUser(user.toEntity());
-        return ResponseEntity.ok(createdUser);
+    public ResponseEntity<?> createUser(@RequestBody UserDto user) {
+        RateLimiter rateLimiter = rateLimiterRegistry.rateLimiter("registerRateLimiter");
+        
+        try {
+            if (rateLimiter.acquirePermission()) {
+                User createdUser = userService.createUser(user.toEntity());
+                return ResponseEntity.ok(createdUser);
+            } else {
+                return ResponseEntity
+                    .status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body("Too many registration attempts. Please try again after an hour.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity
+                .status(HttpStatus.TOO_MANY_REQUESTS)
+                .body("Too many registration attempts. Please try again after an hour.");
+        }
     }
 
     @PutMapping("/update/{id}")
