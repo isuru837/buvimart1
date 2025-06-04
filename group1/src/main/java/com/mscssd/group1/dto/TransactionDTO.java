@@ -1,6 +1,8 @@
 package com.mscssd.group1.dto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TransactionDTO {
@@ -11,6 +13,7 @@ public class TransactionDTO {
     private List<TransactionProductDTO> products;
 
     public TransactionDTO() {
+        this.products = new ArrayList<>();
     }
 
     public TransactionDTO(Long transactionId, LocalDateTime transactionDate, Long customerId, String customerName, List<TransactionProductDTO> products) {
@@ -18,7 +21,7 @@ public class TransactionDTO {
         this.transactionDate = transactionDate;
         this.customerId = customerId;
         this.customerName = customerName;
-        this.products = products;
+        this.products = new ArrayList<>(products != null ? products : Collections.emptyList());
     }
 
     public Long getTransactionId() {
@@ -54,10 +57,10 @@ public class TransactionDTO {
     }
 
     public List<TransactionProductDTO> getProducts() {
-        return products;
+        return Collections.unmodifiableList(products);
     }
 
     public void setProducts(List<TransactionProductDTO> products) {
-        this.products = products;
+        this.products = new ArrayList<>(products != null ? products : Collections.emptyList());
     }
 } 

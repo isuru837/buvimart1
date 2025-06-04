@@ -3,6 +3,8 @@ package com.mscssd.group1.controllers;
 import com.mscssd.group1.dtos.ProductDto;
 import com.mscssd.group1.models.Product;
 import com.mscssd.group1.services.ProductService;
+import io.github.resilience4j.ratelimiter.RateLimiter;
+import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,24 +12,46 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
-public class ProductController extends BaseController {
+public class ProductController {
     
     private final ProductService productService;
+    private final RateLimiterRegistry rateLimiterRegistry;
 
     @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, RateLimiterRegistry rateLimiterRegistry) {
         this.productService = productService;
+        this.rateLimiterRegistry = rateLimiterRegistry;
     }
     
     @GetMapping("/all")
-    public ResponseEntity<List<Product>> getAllProducts() {
-        List<Product> products = productService.findAll();
-        return ResponseEntity.ok(products);
+    public ResponseEntity<?> getAllProducts() {
+        RateLimiter rateLimiter = rateLimiterRegistry.rateLimiter("productsRateLimiter");
+        
+        try {
+            if (rateLimiter.acquirePermission()) {
+                List<Product> products = productService.findAll();
+                return ResponseEntity.ok(products);
+            } else {
+                Map<String, String> response = new HashMap<>();
+                response.put("error", "Too many requests. Please try again after a minute.");
+                return ResponseEntity
+                    .status(HttpStatus.TOO_MANY_REQUESTS)
+                    .body(response);
+            }
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Too many requests. Please try again after a minute.");
+            return ResponseEntity
+                .status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(response);
+        }
     }
     
     @GetMapping("/{id}")
@@ -55,6 +79,4 @@ public class ProductController extends BaseController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
-
-   
 } 
