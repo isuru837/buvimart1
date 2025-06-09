@@ -34,18 +34,10 @@ public class ProductController {
     public ResponseEntity<?> getAllProducts() {
         RateLimiter rateLimiter = rateLimiterRegistry.rateLimiter("productsRateLimiter");
         
-        try {
-            if (rateLimiter.acquirePermission()) {
-                List<Product> products = productService.findAll();
-                return ResponseEntity.ok(products);
-            } else {
-                Map<String, String> response = new HashMap<>();
-                response.put("error", "Too many requests. Please try again after a minute.");
-                return ResponseEntity
-                    .status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body(response);
-            }
-        } catch (Exception e) {
+        if (rateLimiter.acquirePermission()) {
+            List<Product> products = productService.findAll();
+            return ResponseEntity.ok(products);
+        } else {
             Map<String, String> response = new HashMap<>();
             response.put("error", "Too many requests. Please try again after a minute.");
             return ResponseEntity
