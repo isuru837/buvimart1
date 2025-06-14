@@ -1,1 +1,71 @@
-<p>sign-up works!</p>
+<div class="sign-up-container">
+  <form (ngSubmit)="onSubmit()" #signUpForm="ngForm">
+    <h2>Sign Up</h2>
+    
+    <div class="form-group">
+      <label>
+        Username:
+        <input type="text" name="userName" [(ngModel)]="user.userName" required />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Password:
+        <input type="password" name="password" [(ngModel)]="user.password" required />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        First Name:
+        <input type="text" name="firstName" [(ngModel)]="user.firstName" required />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Last Name:
+        <input type="text" name="lastName" [(ngModel)]="user.lastName" required />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Email:
+        <input type="email" name="email" [(ngModel)]="user.email" required />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Mobile:
+        <input type="tel" name="mobile" [(ngModel)]="user.mobile" required />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Address Line 1:
+        <input type="text" name="addressLine1" [(ngModel)]="user.addressLine1" required />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Address Line 2:
+        <input type="text" name="addressLine2" [(ngModel)]="user.addressLine2" />
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label>
+        Address Line 3:
+        <input type="text" name="addressLine3" [(ngModel)]="user.addressLine3" />
+      </label>
+    </div>
+
+    <button type="submit" class="btn">Sign Up</button>
+    <button type="button" class="btn back-btn" (click)="goBack()">Back to Products</button>
+  </form>
+</div>
