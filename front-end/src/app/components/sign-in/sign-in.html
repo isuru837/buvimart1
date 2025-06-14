@@ -1,21 +1,52 @@
 <div class="sign-in-container">
   <form (ngSubmit)="onSubmit()" #signInForm="ngForm">
     <h2>Sign In</h2>
+    
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
     <div class="form-group">
       <label>
         Username:
-        <input type="text" name="userName" [(ngModel)]="user.userName" required />
+        <input 
+          type="text" 
+          name="userName" 
+          [(ngModel)]="user.userName" 
+          required 
+          [disabled]="isLoading"
+        />
       </label>
     </div>
   
     <div class="form-group">
       <label>
         Password:
-        <input type="password" name="password" [(ngModel)]="user.password" required />
+        <input 
+          type="password" 
+          name="password" 
+          [(ngModel)]="user.password" 
+          required 
+          [disabled]="isLoading"
+        />
       </label>
     </div>
-    <button type="submit" class="btn">Sign In</button>
-    <button type="button" class="btn back-btn" (click)="goBack()">Back to Products</button>
+
+    <button 
+      type="submit" 
+      class="btn" 
+      [disabled]="isLoading || !signInForm.form.valid"
+    >
+      {{ isLoading ? 'Signing in...' : 'Sign In' }}
+    </button>
+    <button 
+      type="button" 
+      class="btn back-btn" 
+      (click)="goBack()"
+      [disabled]="isLoading"
+    >
+      Back to Products
+    </button>
   </form>
 </div>
   
