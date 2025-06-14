@@ -1,0 +1,12 @@
+.logo {
+    width: 200%;  /* This will make the image twice its original size */
+    height: auto; /* This maintains the aspect ratio */
+}
+
+.header {
+    height: 150%;  /* Increase height by 50% */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+} 
