@@ -9,8 +9,13 @@
   </div>
 
   <div class="right">
-    <button class="btn" routerLink="/sign-in">Sign in</button>
-    <button class="btn" routerLink="/sign-up">Sign Up</button>
+    <ng-container *ngIf="!authService.isLoggedIn(); else userMenu">
+      <button class="btn" routerLink="/sign-in">Sign in</button>
+      <button class="btn" routerLink="/sign-up">Sign Up</button>
+    </ng-container>
+    <ng-template #userMenu>
+      <app-user-menu></app-user-menu>
+    </ng-template>
   </div>
 </header>
 <main>
