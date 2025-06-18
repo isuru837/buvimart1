@@ -1,27 +1,25 @@
-.sign-in-container {
+.edit-profile-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   min-height: calc(100vh - 80px);
   background-color: #f5f5f5;
-  padding: 2rem;
+  padding: 2rem 0;
 }
 
-form {
+.edit-profile-card {
   background: white;
-  padding: 2.5rem;
+  padding: 2rem;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  max-width: 600px;
 }
 
 h2 {
   color: #333;
   margin-bottom: 2rem;
   text-align: center;
-  font-size: 1.75rem;
 }
 
 .form-group {
@@ -30,10 +28,9 @@ h2 {
 
 label {
   display: block;
-  color: #555;
+  color: #666;
   font-weight: 500;
   margin-bottom: 0.5rem;
-  font-size: 0.95rem;
 }
 
 input {
@@ -42,7 +39,6 @@ input {
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 1rem;
-  transition: all 0.2s ease;
 }
 
 input:focus {
@@ -51,14 +47,10 @@ input:focus {
   box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.25);
 }
 
-input.error-input {
-  border-color: #dc3545;
-  background-color: #fff8f8;
-}
-
-input.error-input:focus {
-  border-color: #dc3545;
-  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+.error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
 }
 
 .error-message {
@@ -67,24 +59,10 @@ input.error-input:focus {
   border: 1px solid #f5c6cb;
   border-radius: 4px;
   padding: 0.75rem;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  font-size: 0.95rem;
-  animation: fadeIn 0.3s ease;
+  margin-bottom: 1rem;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.button-group {
+.actions {
   display: flex;
   gap: 1rem;
   margin-top: 2rem;
@@ -97,8 +75,7 @@ input.error-input:focus {
   cursor: pointer;
   font-size: 1rem;
   flex: 1;
-  transition: all 0.2s ease;
-  font-weight: 500;
+  transition: background-color 0.2s;
 }
 
 .btn:disabled {
@@ -106,23 +83,20 @@ input.error-input:focus {
   cursor: not-allowed;
 }
 
-.btn:not(.back-btn) {
+.save-btn {
   background-color: #28a745;
   color: white;
 }
 
-.btn:not(.back-btn):hover:not(:disabled) {
+.save-btn:hover:not(:disabled) {
   background-color: #218838;
-  transform: translateY(-1px);
 }
 
-.back-btn {
+.cancel-btn {
   background-color: #6c757d;
   color: white;
 }
 
-.back-btn:hover:not(:disabled) {
+.cancel-btn:hover:not(:disabled) {
   background-color: #5a6268;
-  transform: translateY(-1px);
-}
-  
+} 

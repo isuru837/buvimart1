@@ -1,0 +1,18 @@
+<header class="header">
+  <div class="logo">
+    <a routerLink="/" class="logo-link">
+      <img src="/logo.png" alt="BuvisaraSuperMart Logo" class="logo-image">
+      <span class="logo-text">BuvisaraSuperMart</span>
+    </a>
+  </div>
+  <nav class="nav">
+    <ng-container *ngIf="authService.isLoggedIn(); else notLoggedIn">
+      <a routerLink="/profile">Profile</a>
+      <button (click)="logout()">Logout</button>
+    </ng-container>
+    <ng-template #notLoggedIn>
+      <a routerLink="/sign-in">Sign In</a>
+      <a routerLink="/sign-up">Sign Up</a>
+    </ng-template>
+  </nav>
+</header> 
