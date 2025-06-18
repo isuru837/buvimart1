@@ -38,7 +38,7 @@ public class LoginServiceImpl implements LoginService {
             System.out.println("Role Of User : "+authenticatedUser.getRole().name());
             Token tokens = tokenManager.generateNewToken(authenticatedUser.getUserName(),authenticatedUser.getRole().name(),authenticatedUser.getUserId().toString());
             
-       
+            authenticatedUser.setPassword("");
             // Create login session with current timestamp
             String loginTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
             return new LoginSessionDto(authenticatedUser, tokens, loginTime);

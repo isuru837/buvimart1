@@ -35,11 +35,13 @@ public class UserService {
 
     @Transactional
     public User updateUser(User user) {
-        // If password is being updated, hash the new password
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            String hashedPassword = Encoder.encodePassword(user.getPassword());
-            user.setPassword(hashedPassword);
-        }
+        // Get the existing user to preserve the password
+        User existingUser = userRepository.findById(user.getUserId())
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        // Preserve the existing password
+        user.setPassword(existingUser.getPassword());
+        
         return userRepository.save(user);
     }
 

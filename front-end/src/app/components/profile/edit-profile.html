@@ -1,0 +1,131 @@
+<div class="edit-profile-container">
+  <div class="edit-profile-card">
+    <h2>Edit Profile</h2>
+    
+    <form (ngSubmit)="onSubmit()" #editForm="ngForm">
+      <div class="form-group">
+        <label for="userName">Username</label>
+        <input 
+          type="text" 
+          id="userName" 
+          name="userName" 
+          [(ngModel)]="user.userName" 
+          required
+          #userName="ngModel">
+        <div class="error" *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+          Username is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input 
+          type="text" 
+          id="firstName" 
+          name="firstName" 
+          [(ngModel)]="user.firstName" 
+          required
+          #firstName="ngModel">
+        <div class="error" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+          First name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input 
+          type="text" 
+          id="lastName" 
+          name="lastName" 
+          [(ngModel)]="user.lastName" 
+          required
+          #lastName="ngModel">
+        <div class="error" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+          Last name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          [(ngModel)]="user.email" 
+          required
+          email
+          #email="ngModel">
+        <div class="error" *ngIf="email.invalid && (email.dirty || email.touched)">
+          Valid email is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mobile">Mobile</label>
+        <input 
+          type="tel" 
+          id="mobile" 
+          name="mobile" 
+          [(ngModel)]="user.mobile" 
+          required
+          pattern="[0-9]{10}"
+          #mobile="ngModel">
+        <div class="error" *ngIf="mobile.invalid && (mobile.dirty || mobile.touched)">
+          Valid 10-digit mobile number is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="addressLine1">Address Line 1</label>
+        <input 
+          type="text" 
+          id="addressLine1" 
+          name="addressLine1" 
+          [(ngModel)]="user.addressLine1" 
+          required
+          #addressLine1="ngModel">
+        <div class="error" *ngIf="addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)">
+          Address Line 1 is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="addressLine2">Address Line 2</label>
+        <input 
+          type="text" 
+          id="addressLine2" 
+          name="addressLine2" 
+          [(ngModel)]="user.addressLine2">
+      </div>
+
+      <div class="form-group">
+        <label for="addressLine3">Address Line 3</label>
+        <input 
+          type="text" 
+          id="addressLine3" 
+          name="addressLine3" 
+          [(ngModel)]="user.addressLine3">
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="actions">
+        <button 
+          type="submit" 
+          class="btn save-btn" 
+          [disabled]="editForm.invalid || isLoading">
+          {{ isLoading ? 'Saving...' : 'Save Changes' }}
+        </button>
+        <button 
+          type="button" 
+          class="btn cancel-btn" 
+          (click)="goBack()" 
+          [disabled]="isLoading">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div> 
