@@ -2,7 +2,6 @@ package com.mscssd.group1.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -51,9 +50,8 @@ public class UserController extends BaseController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('REG_USER')")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user, HttpServletRequest request) {
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody User user, HttpServletRequest request) {
         // Get the current authentication
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
@@ -69,12 +67,7 @@ public class UserController extends BaseController {
         // Extract the token and get the user ID
         String token = authHeader.substring(7);
         String userIdFromToken = tokenManager.extractUserId(token);
-        
-        if (userIdFromToken == null || !userIdFromToken.equals(id.toString())) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only update your own profile");
-        }
-
-        user.setUserId(id);
+        user.setUserId(Long.parseLong(userIdFromToken));
         User updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
     }

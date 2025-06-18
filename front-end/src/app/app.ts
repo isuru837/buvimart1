@@ -3,12 +3,11 @@ import { RouterOutlet, RouterLink } from '@angular/router';
 import { UserMenu } from './components/user-menu/user-menu';
 import { AuthService } from './services/auth.service';
 import { CommonModule } from '@angular/common';
-import { EditProfile } from './components/profile/edit-profile';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, UserMenu, CommonModule, EditProfile],
+  imports: [RouterOutlet, RouterLink, UserMenu, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
