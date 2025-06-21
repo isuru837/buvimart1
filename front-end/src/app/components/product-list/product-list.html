@@ -1,8 +1,25 @@
 <div class="product-grid">
-    <div class="product-card" *ngFor="let product of products">
-      <h3>{{ product.name }}</h3>
-      <p>💰 Price: ${{ product.price }}</p>
-      <p>📦 Quantity: {{ product.quantity }}</p>
-    </div>
+  <!-- Loading state -->
+  <div *ngIf="isLoadingState" class="loading">
+    <p>Loading products... (isLoading: {{ isLoading }})</p>
   </div>
+
+  <!-- Error state -->
+  <div *ngIf="errorMessage" class="error">
+    <p>{{ errorMessage }}</p>
+    <button (click)="loadProducts()" class="retry-btn">Retry</button>
+  </div>
+
+  <!-- No results state -->
+  <div *ngIf="!isLoadingState && !errorMessage && filteredProducts.length === 0" class="no-results">
+    <p>No products found matching your search.</p>
+  </div>
+
+  <!-- Products grid -->
+  <div class="product-card" *ngFor="let product of filteredProducts">
+    <h3>{{ product.name }}</h3>
+    <p>💰 Price: ${{ product.price }}</p>
+    <p>📦 Quantity: {{ product.quantity }}</p>
+  </div>
+</div>
   

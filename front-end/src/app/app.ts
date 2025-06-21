@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { UserMenu } from './components/user-menu/user-menu';
 import { AuthService } from './services/auth.service';
+import { SearchService } from './services/search.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,5 +15,14 @@ import { CommonModule } from '@angular/common';
 export class App {
   protected title = 'front-end';
 
-  constructor(public authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private searchService: SearchService
+  ) {}
+
+  onSearchChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    console.log('App: Search input changed to:', target.value);
+    this.searchService.setSearchTerm(target.value);
+  }
 }
