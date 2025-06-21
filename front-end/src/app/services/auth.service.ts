@@ -166,6 +166,17 @@ export class AuthService {
     return isLoggedIn;
   }
 
+  isAdmin(): boolean {
+    const user = this.userSubject.value;
+    const isAdmin = user && user.role === 'ADMIN';
+    console.log('isAdmin check:', isAdmin, 'User role:', user?.role);
+    return isAdmin;
+  }
+
+  getCurrentUser(): any {
+    return this.userSubject.value;
+  }
+
   updateUser(userData: any): Observable<any> {
     console.log('Updating user data:', userData);
     

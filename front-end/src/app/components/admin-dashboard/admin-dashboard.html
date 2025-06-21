@@ -1,0 +1,73 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <div class="user-info">
+      <span>Welcome, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+      <button (click)="logout()" class="logout-btn">Logout</button>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon">📦</div>
+      <div class="stat-content">
+        <h3>Total Products</h3>
+        <p class="stat-number">{{ stats.totalProducts }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-content">
+        <h3>Total Users</h3>
+        <p class="stat-number">{{ stats.totalUsers }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">📋</div>
+      <div class="stat-content">
+        <h3>Total Orders</h3>
+        <p class="stat-number">{{ stats.totalOrders }}</p>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-content">
+        <h3>Total Revenue</h3>
+        <p class="stat-number">${{ stats.revenue.toLocaleString() }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-actions">
+    <div class="action-section">
+      <h2>Quick Actions</h2>
+      <div class="action-buttons">
+        <button class="action-btn">Manage Products</button>
+        <button class="action-btn">Manage Users</button>
+        <button class="action-btn">View Orders</button>
+        <button class="action-btn">Generate Reports</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="recent-activity">
+    <h2>Recent Activity</h2>
+    <div class="activity-list">
+      <div class="activity-item">
+        <span class="activity-time">2 hours ago</span>
+        <span class="activity-text">New product "Gaming Laptop" added</span>
+      </div>
+      <div class="activity-item">
+        <span class="activity-time">4 hours ago</span>
+        <span class="activity-text">User "john_doe" registered</span>
+      </div>
+      <div class="activity-item">
+        <span class="activity-time">6 hours ago</span>
+        <span class="activity-text">Order #12345 completed</span>
+      </div>
+    </div>
+  </div>
+</div>
