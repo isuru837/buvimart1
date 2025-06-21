@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -19,9 +21,16 @@ export class AdminDashboard implements OnInit {
     revenue: 0
   };
 
+  showManageProducts = false;
+  products: any[] = [];
+  isLoadingProducts = false;
+  productsError = '';
+
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -42,5 +51,36 @@ export class AdminDashboard implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  onManageProducts() {
+    this.fetchProducts();
+  }
+
+  fetchProducts() {
+    this.isLoadingProducts = true;
+    this.productsError = '';
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    // LOGGING
+     console.log('is product loading Before :',this.isLoadingProducts);
+    this.http.get<any[]>(`${environment.apiUrl}/api/products/all-admin`, { headers }).subscribe({
+      next: (data) => {
+        this.products = data;
+        this.isLoadingProducts = false;
+        this.showManageProducts = true;
+        this.cdr.detectChanges();
+        console.log('is product loading After :',this.isLoadingProducts);
+      },
+      error: (err) => {
+        this.productsError = 'Failed to load products.';
+        this.isLoadingProducts = false;
+        this.cdr.detectChanges();
+        console.error('Error fetching products:', err);
+      }
+    });
+    this.isLoadingProducts = false;
   }
 }

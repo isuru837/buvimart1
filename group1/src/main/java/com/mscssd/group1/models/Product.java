@@ -30,6 +30,9 @@ public class Product {
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = false;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean active = false;
+
     // Getters
     public Long getId() {
         return id;
@@ -53,6 +56,10 @@ public class Product {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     // Setters
@@ -80,6 +87,10 @@ public class Product {
         this.deleted = deleted;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -90,6 +101,7 @@ public class Product {
           .append(", price=").append(price)
           .append(", stockQuantity=").append(stockQuantity)
           .append(", deleted=").append(deleted)
+          .append(", active=").append(active)
           .append('}');
         return sb.toString();
     }
@@ -102,6 +114,7 @@ public class Product {
         this.price = other.price;
         this.stockQuantity = other.stockQuantity;
         this.deleted = other.deleted;
+        this.active = other.active;
     }
     public Product() {
         
