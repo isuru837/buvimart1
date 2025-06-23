@@ -23,6 +23,8 @@ public class ProductDto {
 
     private Boolean active;
 
+    private Boolean deleted;
+
     public Product toEntity() {
         Product product = new Product();
         product.setId(this.id);
@@ -34,6 +36,11 @@ public class ProductDto {
             product.setActive(this.active);
         } else {
             product.setActive(false);
+        }
+        if (this.deleted != null) {
+            product.setDeleted(this.deleted);
+        } else {
+            product.setDeleted(false);
         }
         return product;
     }
@@ -51,4 +58,6 @@ public class ProductDto {
     public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
+    public Boolean getDeleted() { return deleted; }
+    public void setDeleted(Boolean deleted) { this.deleted = deleted; }
 } 

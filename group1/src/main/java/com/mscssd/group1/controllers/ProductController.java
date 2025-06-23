@@ -65,6 +65,7 @@ public class ProductController {
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
+       System.out.println("Product is deleted : "+productDto.getDeleted());
         return productService.findById(id)
                 .map(existingProduct -> {
                     Product product = productDto.toEntity();

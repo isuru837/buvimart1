@@ -29,6 +29,12 @@ export class AdminDashboard implements OnInit {
 
   showAddProductOverlay = false;
 
+  showMenuIndex: number | null = null;
+
+  selectedProduct: any = null;
+  showViewProductOverlay: boolean = false;
+  showEditProductOverlay: boolean = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -57,6 +63,7 @@ export class AdminDashboard implements OnInit {
   }
 
   onManageProducts() {
+    this.showManageProducts = true;
     this.fetchProducts();
   }
 
@@ -93,5 +100,65 @@ export class AdminDashboard implements OnInit {
 
   closeAddProductOverlay() {
     this.showAddProductOverlay = false;
+  }
+
+  onMenuClick(index: number) {
+    this.showMenuIndex = this.showMenuIndex === index ? null : index;
+  }
+
+  onViewProduct(product: any) {
+    this.selectedProduct = { ...product, status: product.status || (product.active ? 'Active' : 'Inactive') };
+    this.showViewProductOverlay = true;
+    this.showMenuIndex = null;
+  }
+
+  closeViewProductOverlay() {
+    this.showViewProductOverlay = false;
+    this.selectedProduct = null;
+  }
+
+  onEditProduct(product: any) {
+    this.selectedProduct = { ...product, status: product.status || (product.active ? 'Active' : 'Inactive') };
+    this.showEditProductOverlay = true;
+    this.showMenuIndex = null;
+  }
+
+  closeEditProductOverlay() {
+    this.showEditProductOverlay = false;
+    this.selectedProduct = null;
+  }
+
+  onDeleteProduct(product: any) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    const body: any = {
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      stockQuantity: product.stockQuantity,
+      deleted: true,
+      active: product.status ? product.status === 'Active' : !!product.active
+    };
+    this.http.put<any>(`${environment.apiUrl}/api/products/update/${product.id}`, body, { headers }).subscribe({
+      next: () => {
+        this.fetchProducts();
+        this.showMenuIndex = null;
+      },
+      error: (err) => {
+        alert('Failed to delete product.');
+        this.showMenuIndex = null;
+      }
+    });
+  }
+
+  handleProductSaved() {
+    this.showManageProducts = true;
+    this.fetchProducts();
+    this.closeAddProductOverlay();
+    this.closeEditProductOverlay();
+    this.closeViewProductOverlay && this.closeViewProductOverlay();
   }
 }

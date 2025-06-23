@@ -24,6 +24,7 @@ export class ProductAddUpdate {
   @Input() isEditMode: boolean = false;
 
   @Output() exit = new EventEmitter<void>();
+  @Output() productSaved = new EventEmitter<void>();
 
   errorMessage: string = '';
   successMessage: string = '';
@@ -62,36 +63,60 @@ export class ProductAddUpdate {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    const body = {
+    const body: any = {
       name: this.product.name,
       description: this.product.description,
       price: this.product.price,
       stockQuantity: this.product.stockQuantity
     };
-    this.http.post<any>(`${environment.apiUrl}/api/products/add`, body, { headers }).subscribe({
-      next: (res) => {
-        this.successMessage = 'Product added successfully!';
-        this.isLoading = false;
-        // Reset each property individually
-        this.product.name = '';
-        this.product.description = '';
-        this.product.price = null;
-        this.product.stockQuantity = null;
-        this.product.delete = false;
-        if (!this.isEditMode) {
-          this.product.status = 'Active';
+    if (this.isEditMode && this.product.id) {
+      // Edit mode: add 'delete' and 'active' fields
+      body.delete = this.product.delete;
+      body.active = this.product.status === 'Active';
+      this.http.put<any>(`${environment.apiUrl}/api/products/update/${this.product.id}`, body, { headers }).subscribe({
+        next: (res) => {
+          this.successMessage = 'Product updated successfully!';
+          this.isLoading = false;
+          this.errorMessage = '';
+          this.productSaved.emit();
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 2000);
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.errorMessage = err?.error?.message || 'Failed to update product.';
+          this.isLoading = false;
         }
-        this.errorMessage = '';
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 2000);
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        this.errorMessage = err?.error?.message || 'Failed to add product.';
-        this.isLoading = false;
-      }
-    });
+      });
+    } else {
+      // Add mode: POST add
+      this.http.post<any>(`${environment.apiUrl}/api/products/add`, body, { headers }).subscribe({
+        next: (res) => {
+          this.successMessage = 'Product added successfully!';
+          this.isLoading = false;
+          // Reset each property individually
+          this.product.name = '';
+          this.product.description = '';
+          this.product.price = null;
+          this.product.stockQuantity = null;
+          this.product.delete = false;
+          if (!this.isEditMode) {
+            this.product.status = 'Active';
+          }
+          this.errorMessage = '';
+          this.productSaved.emit();
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 2000);
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          this.errorMessage = err?.error?.message || 'Failed to add product.';
+          this.isLoading = false;
+        }
+      });
+    }
   }
 
   onExit() {

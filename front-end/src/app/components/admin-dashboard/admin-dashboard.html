@@ -87,10 +87,11 @@
           <th>Description</th>
           <th>Stock Quantity</th>
           <th>Status</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of products">
+        <tr *ngFor="let product of products; let i = index">
           <td>{{ product.name }}</td>
           <td>{{ product.description }}</td>
           <td>{{ product.stockQuantity }}</td>
@@ -98,6 +99,16 @@
             <span [ngClass]="{'active-status': product.active, 'inactive-status': !product.active}">
               {{ product.active ? 'Active' : 'Inactive' }}
             </span>
+          </td>
+          <td class="actions-cell">
+            <button class="menu-btn" (click)="onMenuClick(i)">
+              <span class="hamburger-icon">&#8942;</span>
+            </button>
+            <div class="menu-dropdown" *ngIf="showMenuIndex === i">
+              <button (click)="onViewProduct(product)">View Product</button>
+              <button (click)="onEditProduct(product)">Edit Product</button>
+              <button (click)="onDeleteProduct(product)">Delete Product</button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -107,7 +118,21 @@
   <div *ngIf="showAddProductOverlay" class="overlay-backdrop">
     <div class="overlay-panel">
       <button class="close-btn" (click)="closeAddProductOverlay()">&times;</button>
-      <app-product-add-update (exit)="closeAddProductOverlay()"></app-product-add-update>
+      <app-product-add-update (exit)="closeAddProductOverlay()" (productSaved)="handleProductSaved()"></app-product-add-update>
+    </div>
+  </div>
+
+  <div *ngIf="showViewProductOverlay" class="overlay-backdrop">
+    <div class="overlay-panel">
+      <button class="close-btn" (click)="closeViewProductOverlay()">&times;</button>
+      <app-product-add-update [product]="selectedProduct" [isEditMode]="false" (exit)="closeViewProductOverlay()"></app-product-add-update>
+    </div>
+  </div>
+
+  <div *ngIf="showEditProductOverlay" class="overlay-backdrop">
+    <div class="overlay-panel">
+      <button class="close-btn" (click)="closeEditProductOverlay()">&times;</button>
+      <app-product-add-update [product]="selectedProduct" [isEditMode]="true" (exit)="closeEditProductOverlay()" (productSaved)="handleProductSaved()"></app-product-add-update>
     </div>
   </div>
 </div>
