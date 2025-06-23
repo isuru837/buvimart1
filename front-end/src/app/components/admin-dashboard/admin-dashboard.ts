@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { ProductAddUpdate } from '../product-add-update/product-add-update';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductAddUpdate],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css'
 })
@@ -25,6 +26,8 @@ export class AdminDashboard implements OnInit {
   products: any[] = [];
   isLoadingProducts = false;
   productsError = '';
+
+  showAddProductOverlay = false;
 
   constructor(
     private authService: AuthService,
@@ -82,5 +85,13 @@ export class AdminDashboard implements OnInit {
       }
     });
     this.isLoadingProducts = false;
+  }
+
+  onAddProduct() {
+    this.showAddProductOverlay = true;
+  }
+
+  closeAddProductOverlay() {
+    this.showAddProductOverlay = false;
   }
 }

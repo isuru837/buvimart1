@@ -76,7 +76,7 @@
   <div *ngIf="showManageProducts" class="manage-products">
     <div class="manage-products-header">
       <h2>Manage Products</h2>
-      <button class="add-product-btn">Add Product</button>
+      <button class="add-product-btn" (click)="onAddProduct()">Add Product</button>
     </div>
     <div *ngIf="isLoadingProducts" class="loading">Loading products...</div>
     <div *ngIf="productsError" class="error">{{ productsError }}</div>
@@ -102,5 +102,12 @@
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <div *ngIf="showAddProductOverlay" class="overlay-backdrop">
+    <div class="overlay-panel">
+      <button class="close-btn" (click)="closeAddProductOverlay()">&times;</button>
+      <app-product-add-update (exit)="closeAddProductOverlay()"></app-product-add-update>
+    </div>
   </div>
 </div>
