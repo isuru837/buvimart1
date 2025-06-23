@@ -85,6 +85,10 @@ export class ProductAddUpdate {
           this.cdr.detectChanges();
         },
         error: (err) => {
+          if (err.status === 401) {
+            this.exit.emit();
+            return;
+          }
           this.errorMessage = err?.error?.message || 'Failed to update product.';
           this.isLoading = false;
         }
@@ -112,6 +116,10 @@ export class ProductAddUpdate {
           this.cdr.detectChanges();
         },
         error: (err) => {
+          if (err.status === 401) {
+            this.exit.emit();
+            return;
+          }
           this.errorMessage = err?.error?.message || 'Failed to add product.';
           this.isLoading = false;
         }

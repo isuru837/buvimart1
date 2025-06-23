@@ -76,6 +76,7 @@
   <div *ngIf="showManageProducts" class="manage-products">
     <div class="manage-products-header">
       <h2>Manage Products</h2>
+      <input type="text" class="admin-search-bar" placeholder="Search products..." [(ngModel)]="searchTerm" (input)="onAdminSearchChange()" />
       <button class="add-product-btn" (click)="onAddProduct()">Add Product</button>
     </div>
     <div *ngIf="isLoadingProducts" class="loading">Loading products...</div>
@@ -91,7 +92,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let product of products; let i = index">
+        <tr *ngFor="let product of filteredProducts; let i = index">
           <td>{{ product.name }}</td>
           <td>{{ product.description }}</td>
           <td>{{ product.stockQuantity }}</td>
