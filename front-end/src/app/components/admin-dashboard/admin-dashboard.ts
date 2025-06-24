@@ -49,6 +49,22 @@ export class AdminDashboard implements OnInit {
   selectedTransaction: any = null;
   showTransactionOverlay: boolean = false;
 
+  showManageUsers = false;
+  users: any[] = [];
+  filteredUsers: any[] = [];
+  isLoadingUsers = false;
+  usersError = '';
+  userSearchTerm: string = '';
+
+  selectedUser: any = null;
+  showUserOverlay: boolean = false;
+
+  userOverlaySuccessMessage: string = '';
+  userOverlayErrorMessage: string = '';
+
+  userActiveChanged: boolean = false;
+  initialUserActive: boolean = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -79,6 +95,7 @@ export class AdminDashboard implements OnInit {
   onManageProducts() {
     this.showManageProducts = true;
     this.showManageOrders = false;
+    this.showManageUsers = false;
     this.fetchProducts();
   }
 
@@ -203,6 +220,7 @@ export class AdminDashboard implements OnInit {
   onManageOrders() {
     this.showManageOrders = true;
     this.showManageProducts = false;
+    this.showManageUsers = false;
     this.fetchTransactions();
   }
 
@@ -259,5 +277,98 @@ export class AdminDashboard implements OnInit {
   closeTransactionOverlay() {
     this.showTransactionOverlay = false;
     this.selectedTransaction = null;
+  }
+
+  onManageUsers() {
+    this.showManageUsers = true;
+    this.showManageProducts = false;
+    this.showManageOrders = false;
+    this.fetchUsers();
+  }
+
+  fetchUsers() {
+    this.isLoadingUsers = true;
+    this.usersError = '';
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<any[]>(`${environment.apiUrl}/api/users/active`, { headers }).subscribe({
+      next: (data) => {
+        this.users = data;
+        this.filterUsers();
+        this.isLoadingUsers = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.logout();
+          return;
+        }
+        this.usersError = 'Failed to load users.';
+        this.isLoadingUsers = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  onUserSearchChange() {
+    this.filterUsers();
+  }
+
+  filterUsers() {
+    const term = this.userSearchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredUsers = this.users;
+      return;
+    }
+    this.filteredUsers = this.users.filter(user =>
+      (user.userId && user.userId.toString().includes(term)) ||
+      (user.firstName && user.firstName.toLowerCase().includes(term)) ||
+      (user.lastName && user.lastName.toLowerCase().includes(term)) ||
+      (user.role && user.role.toLowerCase().includes(term))
+    );
+  }
+
+  onUserRowClick(user: any) {
+    this.selectedUser = { ...user };
+    this.showUserOverlay = true;
+    this.initialUserActive = user.active;
+    this.userActiveChanged = false;
+  }
+
+  closeUserOverlay() {
+    this.showUserOverlay = false;
+    this.selectedUser = null;
+  }
+
+  onUserSave() {
+    if (!this.userActiveChanged) return;
+    this.updateUserActiveStatus(this.selectedUser.userId, this.selectedUser.active);
+    this.cdr.detectChanges
+  }
+
+  updateUserActiveStatus(userId: any, active: boolean) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    const body = { userId, active };
+    this.http.put<any>(`${environment.apiUrl}/api/users/update-active-status`, body, { headers }).subscribe({
+      next: () => {
+        this.userOverlaySuccessMessage = 'User status updated successfully!';
+        this.userOverlayErrorMessage = '';
+        this.fetchUsers();
+        setTimeout(() => {
+          this.userOverlaySuccessMessage = '';
+          this.closeUserOverlay();
+        }, 2000);
+      },
+      error: (err) => {
+        this.userOverlayErrorMessage = 'Failed to update user status.';
+        this.userOverlaySuccessMessage = '';
+      }
+    });
   }
 }

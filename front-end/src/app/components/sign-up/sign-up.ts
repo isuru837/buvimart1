@@ -3,11 +3,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './sign-up.html',
   styleUrl: './sign-up.css'
 })

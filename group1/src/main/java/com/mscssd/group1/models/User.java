@@ -60,6 +60,10 @@ public class User {
     @ColumnDefault("false")
     private boolean deleted = false;
 
+    @Column(name = "is_active", nullable = false)
+    @ColumnDefault("true")
+    private boolean isActive = true;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
@@ -107,6 +111,10 @@ public class User {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 
     public Role getRole() {
@@ -159,6 +167,10 @@ public class User {
         this.deleted = deleted;
     }
 
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
     public void setRole(Role role) {
         this.role = role;
     }
@@ -177,6 +189,7 @@ public class User {
         this.mobile = other.mobile;
         this.deleted = other.deleted;
         this.role = other.role;
+        this.isActive = other.isActive;
     }
 
     public User() {
@@ -196,6 +209,7 @@ public class User {
                 ", addressLine2='" + addressLine2 + '\'' +
                 ", addressLine3='" + addressLine3 + '\'' +
                 ", deleted=" + deleted +
+                ", isActive=" + isActive +
                 ", role=" + role +
                 '}';
     }

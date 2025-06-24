@@ -48,26 +48,7 @@
         <div class="action-buttons">
           <button class="action-btn" (click)="onManageProducts()">Manage Products</button>
           <button class="action-btn" (click)="onManageOrders()">Manage Orders</button>
-          <button class="action-btn">Manage Users</button>
-          <button class="action-btn">Generate Reports</button>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="!showManageProducts && !showManageOrders" class="recent-activity">
-      <h2>Recent Activity</h2>
-      <div class="activity-list">
-        <div class="activity-item">
-          <span class="activity-time">2 hours ago</span>
-          <span class="activity-text">New product "Gaming Laptop" added</span>
-        </div>
-        <div class="activity-item">
-          <span class="activity-time">4 hours ago</span>
-          <span class="activity-text">User "john_doe" registered</span>
-        </div>
-        <div class="activity-item">
-          <span class="activity-time">6 hours ago</span>
-          <span class="activity-text">Order #12345 completed</span>
+          <button class="action-btn" (click)="onManageUsers()">Manage Users</button>
         </div>
       </div>
     </div>
@@ -141,6 +122,33 @@
     </table>
   </div>
 
+  <div *ngIf="showManageUsers" class="manage-users">
+    <div class="manage-products-header">
+      <h2>Manage Users</h2>
+      <input type="text" class="admin-search-bar" placeholder="Search users..." [(ngModel)]="userSearchTerm" (input)="onUserSearchChange()" />
+    </div>
+    <div *ngIf="isLoadingUsers" class="loading">Loading users...</div>
+    <div *ngIf="usersError" class="error">{{ usersError }}</div>
+    <table *ngIf="!isLoadingUsers && !usersError" class="products-table">
+      <thead>
+        <tr>
+          <th>UserId</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of filteredUsers" (click)="onUserRowClick(user)" style="cursor:pointer;">
+          <td>{{ user.userId }}</td>
+          <td>{{ user.firstName }}</td>
+          <td>{{ user.lastName }}</td>
+          <td>{{ user.role }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <div *ngIf="showAddProductOverlay" class="overlay-backdrop">
     <div class="overlay-panel">
       <button class="close-btn" (click)="closeAddProductOverlay()">&times;</button>
@@ -191,6 +199,31 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div *ngIf="showUserOverlay" class="overlay-backdrop">
+    <div class="overlay-panel" style="min-width: 400px; max-width: 90vw;">
+      <button class="close-btn" (click)="closeUserOverlay()">&times;</button>
+      <h2>User Details</h2>
+      <div *ngIf="userOverlaySuccessMessage" class="success-message" style="margin-bottom: 1rem;">{{ userOverlaySuccessMessage }}</div>
+      <div *ngIf="userOverlayErrorMessage" class="error-message" style="margin-bottom: 1rem;">{{ userOverlayErrorMessage }}</div>
+      <div class="user-details-view">
+        <div><strong>UserId:</strong> {{ selectedUser?.userId }}</div>
+        <div><strong>Username:</strong> {{ selectedUser?.userName }}</div>
+        <div><strong>First Name:</strong> {{ selectedUser?.firstName }}</div>
+        <div><strong>Last Name:</strong> {{ selectedUser?.lastName }}</div>
+        <div><strong>Email:</strong> {{ selectedUser?.email }}</div>
+        <div><strong>Mobile:</strong> {{ selectedUser?.mobile }}</div>
+        <div><strong>Role:</strong> {{ selectedUser?.role }}</div>
+        <div><strong>Active:</strong>
+          <input type="checkbox" [(ngModel)]="selectedUser.active" (change)="userActiveChanged = (selectedUser.active !== initialUserActive)" />
+        </div>
+      </div>
+      <div class="form-actions" style="margin-top: 1.5rem;">
+        <button class="btn save-btn" (click)="onUserSave()" [disabled]="!userActiveChanged">Save</button>
+        <button class="btn exit-btn" (click)="closeUserOverlay()">Exit</button>
+      </div>
     </div>
   </div>
 </div>

@@ -14,6 +14,10 @@ import com.mscssd.group1.services.UserService;
 import com.mscssd.group1.util.TokenManager;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import org.springframework.security.access.prepost.PreAuthorize;
+import java.util.List;
+import java.util.Optional;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -70,5 +74,36 @@ public class UserController extends BaseController {
         user.setUserId(Long.parseLong(userIdFromToken));
         User updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/active")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UserDto>> getAllActiveUsers() {
+        List<User> users = userService.getAllActiveUsers();
+        List<UserDto> userDtos = users.stream()
+            .map(user -> {
+                UserDto dto = new UserDto(user);
+                dto.setPassword(null); // Ensure password is not included
+                return dto;
+            })
+            .toList();
+        return ResponseEntity.ok(userDtos);
+    }
+
+    @PutMapping("/update-active-status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> updateUserActiveStatus(@RequestBody UserDto userDto) {
+        if (userDto.getUserId() == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "User ID is required"));
+        }
+        Optional<User> userOpt = userService.findById(userDto.getUserId());
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+        User user = userOpt.get();
+        user.setIsActive(userDto.isActive());
+        System.out.println("@@@@@@@"+user.toString());
+        userService.updateUser(user);
+        return ResponseEntity.ok(Map.of("message", "User active status updated successfully"));
     }
 } 
