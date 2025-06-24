@@ -44,12 +44,12 @@ public class LoginController {
             } else {
                 return ResponseEntity
                     .status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body("Too many failed login attempts. Please try again after 1 minute.");
+                    .body(Map.of("error","Too many failed login attempts. Please try again after 1 minute."));
             }
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.TOO_MANY_REQUESTS)
-                .body("Too many failed login attempts. Please try again after 1 minute.");
+                .body(Map.of("error","Too many failed login attempts. Please try again after 1 minute."));
         }
     }
 } 
