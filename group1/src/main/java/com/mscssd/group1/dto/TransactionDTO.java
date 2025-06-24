@@ -10,17 +10,19 @@ public class TransactionDTO {
     private LocalDateTime transactionDate;
     private Long customerId;
     private String customerName;
+    private Double transactionValue;
     private List<TransactionProductDTO> products;
 
     public TransactionDTO() {
         this.products = new ArrayList<>();
     }
 
-    public TransactionDTO(Long transactionId, LocalDateTime transactionDate, Long customerId, String customerName, List<TransactionProductDTO> products) {
+    public TransactionDTO(Long transactionId, LocalDateTime transactionDate, Long customerId, String customerName, Double transactionValue, List<TransactionProductDTO> products) {
         this.transactionId = transactionId;
         this.transactionDate = transactionDate;
         this.customerId = customerId;
         this.customerName = customerName;
+        this.transactionValue = transactionValue;
         this.products = new ArrayList<>(products != null ? products : Collections.emptyList());
     }
 
@@ -54,6 +56,14 @@ public class TransactionDTO {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public Double getTransactionValue() {
+        return transactionValue;
+    }
+
+    public void setTransactionValue(Double transactionValue) {
+        this.transactionValue = transactionValue;
     }
 
     public List<TransactionProductDTO> getProducts() {

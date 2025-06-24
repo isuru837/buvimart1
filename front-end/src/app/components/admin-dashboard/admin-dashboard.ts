@@ -46,6 +46,9 @@ export class AdminDashboard implements OnInit {
   transactionsError = '';
   transactionSearchTerm: string = '';
 
+  selectedTransaction: any = null;
+  showTransactionOverlay: boolean = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -244,5 +247,17 @@ export class AdminDashboard implements OnInit {
       (txn.customerName && txn.customerName.toLowerCase().includes(term)) ||
       (txn.transactionDate && txn.transactionDate.toLowerCase().includes(term))
     );
+  }
+
+  onTransactionRowClick(txn: any) {
+    console.log('clicked on '+JSON.stringify(txn.products))
+    this.selectedTransaction = txn;
+    this.showTransactionOverlay = true;
+    this.cdr.detectChanges
+  }
+
+  closeTransactionOverlay() {
+    this.showTransactionOverlay = false;
+    this.selectedTransaction = null;
   }
 }

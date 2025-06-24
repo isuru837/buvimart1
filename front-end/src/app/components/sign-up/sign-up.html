@@ -1,6 +1,8 @@
 <div class="sign-up-container">
   <form (ngSubmit)="onSubmit()" #signUpForm="ngForm">
     <h2>Sign Up</h2>
+    <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+    <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
     
     <div class="form-group">
       <label>

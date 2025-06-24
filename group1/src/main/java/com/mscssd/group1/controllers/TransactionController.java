@@ -61,7 +61,9 @@ public class TransactionController extends BaseController {
                         .map(tp -> new TransactionProductDTO(
                             transaction.getTransactionId(),
                             tp.getProduct().getId(),
-                            tp.getProduct().getName()
+                            tp.getProduct().getName(),
+                            tp.getPriceAtTransaction(),
+                            tp.getQuantity()
                         ))
                         .collect(Collectors.toList());
 
@@ -70,6 +72,7 @@ public class TransactionController extends BaseController {
                         transaction.getTransactionDate(),
                         transaction.getCustomer().getUserId(),
                         transaction.getCustomer().getFirstName() + " " + transaction.getCustomer().getLastName(),
+                        transaction.getTransactionValue(),
                         productDTOs
                     );
                 })

@@ -132,7 +132,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let txn of filteredTransactions">
+        <tr *ngFor="let txn of filteredTransactions" (click)="onTransactionRowClick(txn)" style="cursor:pointer;">
           <td>{{ txn.transactionId }}</td>
           <td>{{ txn.customerName }}</td>
           <td>{{ txn.transactionDate }}</td>
@@ -159,6 +159,38 @@
     <div class="overlay-panel">
       <button class="close-btn" (click)="closeEditProductOverlay()">&times;</button>
       <app-product-add-update [product]="selectedProduct" [isEditMode]="true" (exit)="closeEditProductOverlay()" (productSaved)="handleProductSaved()"></app-product-add-update>
+    </div>
+  </div>
+
+  <div *ngIf="showTransactionOverlay" class="overlay-backdrop">
+    <div class="overlay-panel" style="min-width: 500px; max-width: 90vw;">
+      <button class="close-btn" (click)="closeTransactionOverlay()">&times;</button>
+      <div class="transaction-header">
+        <h2>Transaction Details</h2>
+        <div><strong>ID:</strong> {{ selectedTransaction?.transactionId }}</div>
+        <div><strong>Customer:</strong> {{ selectedTransaction?.customerName }}</div>
+        <div><strong>Date:</strong> {{ selectedTransaction?.transactionDate }}</div>
+        <div *ngIf="selectedTransaction?.transactionValue"><strong>Total Amount:</strong> {{ selectedTransaction?.transactionValue }}</div>
+      </div>
+      <h3>Products</h3>
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of selectedTransaction?.products">
+            <td>{{ item.productName }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.unitPrice }}</td>
+            <td>{{ item.subtotal || (item.unitPrice * item.quantity) }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
