@@ -47,14 +47,14 @@
         <h2>Quick Actions</h2>
         <div class="action-buttons">
           <button class="action-btn" (click)="onManageProducts()">Manage Products</button>
+          <button class="action-btn" (click)="onManageOrders()">Manage Orders</button>
           <button class="action-btn">Manage Users</button>
-          <button class="action-btn">View Orders</button>
           <button class="action-btn">Generate Reports</button>
         </div>
       </div>
     </div>
 
-    <div *ngIf="!showManageProducts" class="recent-activity">
+    <div *ngIf="!showManageProducts && !showManageOrders" class="recent-activity">
       <h2>Recent Activity</h2>
       <div class="activity-list">
         <div class="activity-item">
@@ -111,6 +111,31 @@
               <button (click)="onDeleteProduct(product)">Delete Product</button>
             </div>
           </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="showManageOrders" class="manage-orders">
+    <div class="manage-products-header">
+      <h2>Manage Orders</h2>
+      <input type="text" class="admin-search-bar" placeholder="Search transactions..." [(ngModel)]="transactionSearchTerm" (input)="onTransactionSearchChange()" />
+    </div>
+    <div *ngIf="isLoadingTransactions" class="loading">Loading transactions...</div>
+    <div *ngIf="transactionsError" class="error">{{ transactionsError }}</div>
+    <table *ngIf="!isLoadingTransactions && !transactionsError" class="products-table">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Customer Name</th>
+          <th>Transaction Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let txn of filteredTransactions">
+          <td>{{ txn.transactionId }}</td>
+          <td>{{ txn.customerName }}</td>
+          <td>{{ txn.transactionDate }}</td>
         </tr>
       </tbody>
     </table>

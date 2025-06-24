@@ -39,6 +39,13 @@ export class AdminDashboard implements OnInit {
   searchTerm: string = '';
   filteredProducts: any[] = [];
 
+  showManageOrders = false;
+  transactions: any[] = [];
+  filteredTransactions: any[] = [];
+  isLoadingTransactions = false;
+  transactionsError = '';
+  transactionSearchTerm: string = '';
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -68,6 +75,7 @@ export class AdminDashboard implements OnInit {
 
   onManageProducts() {
     this.showManageProducts = true;
+    this.showManageOrders = false;
     this.fetchProducts();
   }
 
@@ -187,5 +195,54 @@ export class AdminDashboard implements OnInit {
     this.closeAddProductOverlay();
     this.closeEditProductOverlay();
     this.closeViewProductOverlay && this.closeViewProductOverlay();
+  }
+
+  onManageOrders() {
+    this.showManageOrders = true;
+    this.showManageProducts = false;
+    this.fetchTransactions();
+  }
+
+  fetchTransactions() {
+    this.isLoadingTransactions = true;
+    this.transactionsError = '';
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<any[]>(`${environment.apiUrl}/api/transactions`, { headers }).subscribe({
+      next: (data) => {
+        this.transactions = data;
+        this.filterTransactions();
+        this.isLoadingTransactions = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.logout();
+          return;
+        }
+        this.transactionsError = 'Failed to load transactions.';
+        this.isLoadingTransactions = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  onTransactionSearchChange() {
+    this.filterTransactions();
+  }
+
+  filterTransactions() {
+    const term = this.transactionSearchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredTransactions = this.transactions;
+      return;
+    }
+    this.filteredTransactions = this.transactions.filter(txn =>
+      (txn.transactionId && txn.transactionId.toString().includes(term)) ||
+      (txn.customerName && txn.customerName.toLowerCase().includes(term)) ||
+      (txn.transactionDate && txn.transactionDate.toLowerCase().includes(term))
+    );
   }
 }
