@@ -12,10 +12,13 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
     <div class="user-menu" (clickOutside)="isOpen = false">
       <button class="user-button" (click)="toggleMenu()">
         <span class="username">{{ (authService.user$ | async)?.userName }}</span>
+        <span *ngIf="(authService.user$ | async)?.role === 'ADMIN'" class="admin-badge">ADMIN</span>
       </button>
       
       <div class="menu-dropdown" *ngIf="isOpen">
         <a routerLink="/profile" class="menu-item">Profile</a>
+        <a *ngIf="(authService.user$ | async)?.role === 'ADMIN'" routerLink="/admin" class="menu-item admin-item">Admin Dashboard</a>
+        <a *ngIf="(authService.user$ | async)?.role !== 'ADMIN'" routerLink="/" class="menu-item">Products</a>
         <button (click)="logout()" class="menu-item">Sign Out</button>
       </div>
     </div>
@@ -32,11 +35,23 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
       cursor: pointer;
       padding: 0.5rem 1rem;
       font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .username {
       color: #28a745;
       font-weight: 500;
+    }
+
+    .admin-badge {
+      background-color: #dc3545;
+      color: white;
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: bold;
     }
 
     .menu-dropdown {
@@ -64,6 +79,11 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
 
     .menu-item:hover {
       background-color: #f5f5f5;
+    }
+
+    .admin-item {
+      color: #dc3545;
+      font-weight: 500;
     }
   `]
 })

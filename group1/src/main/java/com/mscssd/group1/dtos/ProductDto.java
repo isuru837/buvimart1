@@ -21,6 +21,10 @@ public class ProductDto {
     @Min(value = 0, message = "Stock quantity must be greater than or equal to 0")
     private Integer stockQuantity;
 
+    private Boolean active;
+
+    private Boolean deleted;
+
     public Product toEntity() {
         Product product = new Product();
         product.setId(this.id);
@@ -28,6 +32,16 @@ public class ProductDto {
         product.setDescription(this.description);
         product.setPrice(this.price);
         product.setStockQuantity(this.stockQuantity);
+        if (this.active != null) {
+            product.setActive(this.active);
+        } else {
+            product.setActive(false);
+        }
+        if (this.deleted != null) {
+            product.setDeleted(this.deleted);
+        } else {
+            product.setDeleted(false);
+        }
         return product;
     }
 
@@ -42,4 +56,8 @@ public class ProductDto {
     public void setPrice(Double price) { this.price = price; }
     public Integer getStockQuantity() { return stockQuantity; }
     public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+    public Boolean getDeleted() { return deleted; }
+    public void setDeleted(Boolean deleted) { this.deleted = deleted; }
 } 

@@ -56,9 +56,7 @@ export class ProductList implements OnInit, OnDestroy {
   }
 
   loadProducts() {
-    console.log('Loading products...');
-    console.log('API URL:', `${environment.apiUrl}/api/products/all`);
-    console.log('Setting isLoading to true');
+    
     this.isLoading = true;
     this.errorMessage = '';
     this.cdr.detectChanges();
@@ -66,10 +64,10 @@ export class ProductList implements OnInit, OnDestroy {
     // Safety timeout to prevent infinite loading
     this.loadingTimeout = setTimeout(() => {
       if (this.isLoading) {
-        console.log('Safety timeout triggered - resetting loading state');
+        
         this.isLoading = false;
         this.errorMessage = 'Request took too long. Please try again.';
-        console.log('isLoading set to false due to timeout');
+        
         this.cdr.detectChanges();
       }
     }, 15000); // 15 seconds safety timeout
@@ -91,23 +89,22 @@ export class ProductList implements OnInit, OnDestroy {
             clearTimeout(this.loadingTimeout);
           }
           if (data === null) {
-            console.log('Network error detected');
+            
             this.errorMessage = 'Network error. Please check your connection and try again.';
             this.isLoading = false;
-            console.log('isLoading set to false due to network error');
+            
             this.cdr.detectChanges();
             return;
           }
-          console.log('Products loaded successfully:', data);
+          
           this.products = data;
           this.filteredProducts = data;
           this.isLoading = false;
-          console.log('isLoading set to false after successful load');
+          
           this.cdr.detectChanges();
           
           // Apply current search term after products are loaded
           const currentSearchTerm = this.searchService.getSearchTerm();
-          console.log('Current search term after loading:', currentSearchTerm);
           if (currentSearchTerm) {
             this.filterProducts(currentSearchTerm);
           }
@@ -123,10 +120,11 @@ export class ProductList implements OnInit, OnDestroy {
             this.errorMessage = 'Failed to load products. Please try again later.';
           }
           this.isLoading = false;
-          console.log('isLoading set to false due to error');
+          console.log('Calling detectChanges');
           this.cdr.detectChanges();
         }
       });
+     
   }
 
   filterProducts(searchTerm: string) {
