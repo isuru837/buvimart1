@@ -2,13 +2,18 @@ package com.mscssd.group1.controllers;
 
 import com.mscssd.group1.dtos.CredentialDto;
 import com.mscssd.group1.dtos.LoginSessionDto;
+import com.mscssd.group1.exceptions.AuthenticationException;
 import com.mscssd.group1.services.LoginService;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import jakarta.security.auth.message.AuthException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,10 +36,10 @@ public class LoginController {
                 try {
                     LoginSessionDto loginSession = loginService.login(credentials);
                     return ResponseEntity.ok(loginSession);
-                } catch (Exception e) {
+                } catch (AuthenticationException e) {
                     return ResponseEntity
                         .status(HttpStatus.UNAUTHORIZED)
-                        .body("Invalid credentials");
+                        .body(Map.of("error", e.getMessage()));
                 }
             } else {
                 return ResponseEntity

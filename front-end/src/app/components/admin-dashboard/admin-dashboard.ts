@@ -271,7 +271,7 @@ export class AdminDashboard implements OnInit {
     console.log('clicked on '+JSON.stringify(txn.products))
     this.selectedTransaction = txn;
     this.showTransactionOverlay = true;
-    this.cdr.detectChanges
+    this.cdr.detectChanges()
   }
 
   closeTransactionOverlay() {
@@ -345,16 +345,16 @@ export class AdminDashboard implements OnInit {
   onUserSave() {
     if (!this.userActiveChanged) return;
     this.updateUserActiveStatus(this.selectedUser.userId, this.selectedUser.active);
-    this.cdr.detectChanges
+  
   }
 
-  updateUserActiveStatus(userId: any, active: boolean) {
+  updateUserActiveStatus(userId: any, isActive: boolean) {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    const body = { userId, active };
+    const body = { userId, isActive };
     this.http.put<any>(`${environment.apiUrl}/api/users/update-active-status`, body, { headers }).subscribe({
       next: () => {
         this.userOverlaySuccessMessage = 'User status updated successfully!';

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,16 +18,22 @@ export class SignIn {
   };
   errorMessage: string = '';
   isLoading: boolean = false;
+  isShowLoginError: boolean=false;
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdr :ChangeDetectorRef,
+    private zone: NgZone
   ) {}
 
   onSubmit() {
-    this.errorMessage = '';
+   this.login();
+  }
+ login(){
+ this.errorMessage = '';
     this.isLoading = true;
-
+    this.isShowLoginError = false;
     this.authService.login(this.credentials.userName, this.credentials.password).subscribe({
       next: (response) => {
         this.isLoading = false;
@@ -44,13 +50,17 @@ export class SignIn {
         }
       },
       error: (error) => {
+        this.zone.run(() => {
         this.isLoading = false;
-        console.log('Error:######', error.message);
+        console.log('Error:######', error);
         this.errorMessage = error.message || 'An error occurred during sign in';
+        this.isShowLoginError = true;
+        this.cdr.detectChanges();
+        })
       }
     });
-  }
-
+  
+ }
   goBack() {
     this.router.navigate(['/']);
   }

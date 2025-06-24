@@ -7,7 +7,9 @@ import com.mscssd.group1.models.User;
 import com.mscssd.group1.services.LoginService;
 import com.mscssd.group1.services.UserService;
 import com.mscssd.group1.util.Encoder;
+import com.mscssd.group1.util.MessageConstant;
 import com.mscssd.group1.util.TokenManager;
+import com.mscssd.group1.exceptions.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +37,11 @@ public class LoginServiceImpl implements LoginService {
         if (userOpt.isPresent()) {
             // User is authenticated, generate tokens
             User authenticatedUser = userOpt.get();
+            // Check if user is active
+            if (!authenticatedUser.isActive()) {
+                throw new AuthenticationException(MessageConstant.USER_INACTIVE);
+            }
+            
             System.out.println("Role Of User : "+authenticatedUser.getRole().name());
             Token tokens = tokenManager.generateNewToken(authenticatedUser.getUserName(),authenticatedUser.getRole().name(),authenticatedUser.getUserId().toString());
             
@@ -43,7 +50,7 @@ public class LoginServiceImpl implements LoginService {
             String loginTime = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
             return new LoginSessionDto(authenticatedUser, tokens, loginTime);
         } else {
-            throw new RuntimeException("Invalid username or password");
+            throw new AuthenticationException(MessageConstant.INVALID_USERNAME_OR_PASSWORD);
         }
     }
 
