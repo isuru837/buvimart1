@@ -18,6 +18,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAll();
     // Find only non-deleted products
     List<Product> findByDeletedFalse();
+    // Find only non-deleted and active products
+    List<Product> findByDeletedFalseAndActiveTrue();
     
     // Custom add product method
     @Transactional

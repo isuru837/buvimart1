@@ -4,7 +4,7 @@
     <img src="/logo.png" alt="Logo" class="logo" />
   </div>
 
-  <div class="center">
+  <div class="center" *ngIf="!authService.isAdmin()">
     <input 
       type="text" 
       placeholder="Search products..." 

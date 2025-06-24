@@ -19,6 +19,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
+@CrossOrigin
 public class ProductController {
     
     private final ProductService productService;
@@ -56,6 +57,7 @@ public class ProductController {
     @PostMapping("/add")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> addProduct(@Valid @RequestBody ProductDto productDto) {
+        productDto.setActive(false);
         Product savedProduct = productService.save(productDto.toEntity());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
     }
@@ -63,6 +65,7 @@ public class ProductController {
     @PutMapping("/update/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductDto productDto) {
+       System.out.println("Product is deleted : "+productDto.getDeleted());
         return productService.findById(id)
                 .map(existingProduct -> {
                     Product product = productDto.toEntity();
@@ -70,5 +73,12 @@ public class ProductController {
                     return ResponseEntity.ok(productService.save(product));
                 })
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/all-admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<Product>> getAllProductsForAdmin() {
+        List<Product> products = productService.findAllNotDeleted();
+        return ResponseEntity.ok(products);
     }
 } 

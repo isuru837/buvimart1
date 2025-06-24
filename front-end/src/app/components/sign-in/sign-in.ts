@@ -29,9 +29,19 @@ export class SignIn {
     this.isLoading = true;
 
     this.authService.login(this.credentials.userName, this.credentials.password).subscribe({
-      next: () => {
+      next: (response) => {
         this.isLoading = false;
-        this.router.navigate(['/']);
+        console.log("User "+response.body.user)
+        console.log('Login successful, user role:', response.body.user.role);
+        
+        // Redirect based on user role
+        if (response.body.user.role === 'ADMIN') {
+          console.log('Admin user logged in, redirecting to admin dashboard');
+          this.router.navigate(['/admin']);
+        } else {
+          console.log('Regular user logged in, redirecting to main page');
+          this.router.navigate(['/']);
+        }
       },
       error: (error) => {
         this.isLoading = false;

@@ -1,0 +1,164 @@
+<div class="admin-dashboard">
+  <div class="dashboard-header">
+    <h1>Admin Dashboard</h1>
+    <div class="user-info">
+      <span>Welcome, {{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+      <button (click)="logout()" class="logout-btn">Logout</button>
+    </div>
+  </div>
+
+  <div >
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-content">
+          <h3>Total Products</h3>
+          <p class="stat-number">{{ stats.totalProducts }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-content">
+          <h3>Total Users</h3>
+          <p class="stat-number">{{ stats.totalUsers }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div class="stat-content">
+          <h3>Total Orders</h3>
+          <p class="stat-number">{{ stats.totalOrders }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-content">
+          <h3>Total Revenue</h3>
+          <p class="stat-number">${{ stats.revenue.toLocaleString() }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="admin-actions">
+      <div class="action-section">
+        <h2>Quick Actions</h2>
+        <div class="action-buttons">
+          <button class="action-btn" (click)="onManageProducts()">Manage Products</button>
+          <button class="action-btn" (click)="onManageOrders()">Manage Orders</button>
+          <button class="action-btn">Manage Users</button>
+          <button class="action-btn">Generate Reports</button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!showManageProducts && !showManageOrders" class="recent-activity">
+      <h2>Recent Activity</h2>
+      <div class="activity-list">
+        <div class="activity-item">
+          <span class="activity-time">2 hours ago</span>
+          <span class="activity-text">New product "Gaming Laptop" added</span>
+        </div>
+        <div class="activity-item">
+          <span class="activity-time">4 hours ago</span>
+          <span class="activity-text">User "john_doe" registered</span>
+        </div>
+        <div class="activity-item">
+          <span class="activity-time">6 hours ago</span>
+          <span class="activity-text">Order #12345 completed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showManageProducts" class="manage-products">
+    <div class="manage-products-header">
+      <h2>Manage Products</h2>
+      <input type="text" class="admin-search-bar" placeholder="Search products..." [(ngModel)]="searchTerm" (input)="onAdminSearchChange()" />
+      <button class="add-product-btn" (click)="onAddProduct()">Add Product</button>
+    </div>
+    <div *ngIf="isLoadingProducts" class="loading">Loading products...</div>
+    <div *ngIf="productsError" class="error">{{ productsError }}</div>
+    <table *ngIf="!isLoadingProducts && !productsError" class="products-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Stock Quantity</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of filteredProducts; let i = index">
+          <td>{{ product.name }}</td>
+          <td>{{ product.description }}</td>
+          <td>{{ product.stockQuantity }}</td>
+          <td>
+            <span [ngClass]="{'active-status': product.active, 'inactive-status': !product.active}">
+              {{ product.active ? 'Active' : 'Inactive' }}
+            </span>
+          </td>
+          <td class="actions-cell">
+            <button class="menu-btn" (click)="onMenuClick(i)">
+              <span class="hamburger-icon">&#8942;</span>
+            </button>
+            <div class="menu-dropdown" *ngIf="showMenuIndex === i">
+              <button (click)="onViewProduct(product)">View Product</button>
+              <button (click)="onEditProduct(product)">Edit Product</button>
+              <button (click)="onDeleteProduct(product)">Delete Product</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="showManageOrders" class="manage-orders">
+    <div class="manage-products-header">
+      <h2>Manage Orders</h2>
+      <input type="text" class="admin-search-bar" placeholder="Search transactions..." [(ngModel)]="transactionSearchTerm" (input)="onTransactionSearchChange()" />
+    </div>
+    <div *ngIf="isLoadingTransactions" class="loading">Loading transactions...</div>
+    <div *ngIf="transactionsError" class="error">{{ transactionsError }}</div>
+    <table *ngIf="!isLoadingTransactions && !transactionsError" class="products-table">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Customer Name</th>
+          <th>Transaction Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let txn of filteredTransactions">
+          <td>{{ txn.transactionId }}</td>
+          <td>{{ txn.customerName }}</td>
+          <td>{{ txn.transactionDate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="showAddProductOverlay" class="overlay-backdrop">
+    <div class="overlay-panel">
+      <button class="close-btn" (click)="closeAddProductOverlay()">&times;</button>
+      <app-product-add-update (exit)="closeAddProductOverlay()" (productSaved)="handleProductSaved()"></app-product-add-update>
+    </div>
+  </div>
+
+  <div *ngIf="showViewProductOverlay" class="overlay-backdrop">
+    <div class="overlay-panel">
+      <button class="close-btn" (click)="closeViewProductOverlay()">&times;</button>
+      <app-product-add-update [product]="selectedProduct" [isEditMode]="false" (exit)="closeViewProductOverlay()"></app-product-add-update>
+    </div>
+  </div>
+
+  <div *ngIf="showEditProductOverlay" class="overlay-backdrop">
+    <div class="overlay-panel">
+      <button class="close-btn" (click)="closeEditProductOverlay()">&times;</button>
+      <app-product-add-update [product]="selectedProduct" [isEditMode]="true" (exit)="closeEditProductOverlay()" (productSaved)="handleProductSaved()"></app-product-add-update>
+    </div>
+  </div>
+</div>

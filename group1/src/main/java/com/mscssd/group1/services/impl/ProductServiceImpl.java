@@ -22,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> findAll() {
-        return productRepository.findByDeletedFalse();
+        return productRepository.findByDeletedFalseAndActiveTrue();
     }
 
     @Override
@@ -47,5 +47,10 @@ public class ProductServiceImpl implements ProductService {
             throw new IllegalArgumentException("Product ID cannot be null");
         }
         productRepository.deleteProduct(id);
+    }
+
+    @Override
+    public List<Product> findAllNotDeleted() {
+        return productRepository.findByDeletedFalse();
     }
 } 
