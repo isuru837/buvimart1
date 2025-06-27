@@ -10,6 +10,10 @@
       placeholder="Search products..." 
       class="search-bar" 
       (input)="onSearchChange($event)" />
+    <span class="cart-icon" style="position: relative; font-size: 1.7rem; margin-left: 1rem; vertical-align: middle; cursor: pointer;" (click)="showCartOverlay = true">
+      🛒
+      <span *ngIf="cartProducts.length > 0" class="cart-badge">{{ cartProducts.length }}</span>
+    </span>
   </div>
 
   <div class="right">
@@ -23,6 +27,19 @@
   </div>
 </header>
 <main>
-  <router-outlet></router-outlet>
+  <router-outlet *ngIf="!showCartOverlay"></router-outlet>
 </main>
+
+<div *ngIf="showCartOverlay" class="overlay-backdrop">
+  <div class="overlay-panel" style="min-width: 500px; max-width: 90vw;">
+    <button class="close-btn" (click)="showCartOverlay = false">&times;</button>
+    <app-shopping-cart [cartProducts]="cartProducts" (continueShopping)="onContinueShopping()" (removeFromCart)="onRemoveFromCart($event)" (completeTransaction)="onCompleteTransaction($event)">
+      <ng-container *ngIf="cartProducts.length === 0">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200px;">
+          <button class="btn" (click)="showCartOverlay = false">Continue Shopping</button>
+        </div>
+      </ng-container>
+    </app-shopping-cart>
+  </div>
+</div>
 

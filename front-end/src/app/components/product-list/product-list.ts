@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -19,6 +19,7 @@ export class ProductList implements OnInit, OnDestroy {
   errorMessage: string = '';
   private searchSubscription!: Subscription;
   private loadingTimeout: any;
+  @Output() addToCart = new EventEmitter<any>();
 
   constructor(
     private http: HttpClient,
@@ -145,5 +146,16 @@ export class ProductList implements OnInit, OnDestroy {
       });
       console.log('Filtered products:', this.filteredProducts);
     }
+  }
+
+  onBuyNow(product: any) {
+    // TODO: Implement buy now logic
+    console.log('Buy Now clicked for product:', product);
+  }
+
+  onAddToCart(product: any) {
+    // TODO: Implement add to cart logic
+    console.log('Add to Cart clicked for product:', product);
+    this.addToCart.emit(product);
   }
 }
