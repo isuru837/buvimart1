@@ -21,7 +21,9 @@ export class ProductAddUpdate {
     status: 'Active',
   };
 
+  @Input() isNewMode: boolean = false;
   @Input() isEditMode: boolean = false;
+  @Input() isViewMode: boolean = false;
 
   @Output() exit = new EventEmitter<void>();
   @Output() productSaved = new EventEmitter<void>();

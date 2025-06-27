@@ -162,4 +162,16 @@ public class TransactionServiceImpl implements TransactionService {
         product.setStockQuantity(product.getStockQuantity() - productDto.getQuantity());
         productRepository.save(product);
     }
+
+    @Override
+    public long countTransactions() {
+        return transactionRepository.count();
+    }
+
+    @Override
+    public double getTotalTransactionValue() {
+        return transactionRepository.findByDeletedFalse().stream()
+                .mapToDouble(Transaction::getTransactionValue)
+                .sum();
+    }
 } 

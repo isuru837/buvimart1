@@ -1,22 +1,22 @@
 <form #productForm="ngForm" (ngSubmit)="onSave()" class="product-form">
   <div class="form-group">
     <label for="name">Name</label>
-    <input id="name" name="name" type="text" [(ngModel)]="product.name" required [readonly]="!isEditMode" />
+    <input id="name" name="name" type="text" [(ngModel)]="product.name" required [readonly]="isViewMode" />
   </div>
 
   <div class="form-group">
     <label for="description">Description</label>
-    <textarea id="description" name="description" [(ngModel)]="product.description" required [readonly]="!isEditMode"></textarea>
+    <textarea id="description" name="description" [(ngModel)]="product.description" required [readonly]="isViewMode"></textarea>
   </div>
 
   <div class="form-group">
     <label for="price">Price</label>
-    <input id="price" name="price" type="number" min="0" step="0.01" [(ngModel)]="product.price" required [readonly]="!isEditMode" />
+    <input id="price" name="price" type="number" min="0" step="0.01" [(ngModel)]="product.price" required [readonly]="isViewMode" />
   </div>
 
   <div class="form-group">
     <label for="stockQuantity">Stock Quantity</label>
-    <input id="stockQuantity" name="stockQuantity" type="number" min="0" step="1" [(ngModel)]="product.stockQuantity" required [readonly]="!isEditMode" />
+    <input id="stockQuantity" name="stockQuantity" type="number" min="0" step="1" [(ngModel)]="product.stockQuantity" required [readonly]="isViewMode" />
   </div>
 
   <div class="form-group" *ngIf="isEditMode">
@@ -34,11 +34,11 @@
   </div>
 
   <!-- Show deleted and status in view mode -->
-  <div class="form-group" *ngIf="!isEditMode">
+  <div class="form-group" *ngIf="isViewMode">
     <label>Deleted:</label>
     <span>{{ product.delete ? 'Yes' : 'No' }}</span>
   </div>
-  <div class="form-group" *ngIf="!isEditMode">
+  <div class="form-group" *ngIf="isViewMode">
     <label>Status:</label>
     <span>{{ product.status }}</span>
   </div>
@@ -47,10 +47,10 @@
   <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
 
   <div class="form-actions">
-    <button *ngIf="isEditMode" type="submit" class="btn save-btn" [disabled]="isLoading">
+    <button *ngIf="isEditMode || isNewMode" type="submit" class="btn save-btn" [disabled]="isLoading">
       {{ isLoading ? 'Saving...' : 'Save' }}
     </button>
     <button type="button" class="btn exit-btn" (click)="onExit()">Exit</button>
-    <button *ngIf="isEditMode" type="button" class="btn clear-btn" (click)="onClear()">Clear Fields</button>
+    <button *ngIf="isEditMode || isNewMode" type="button" class="btn clear-btn" (click)="onClear()">Clear Fields</button>
   </div>
 </form>

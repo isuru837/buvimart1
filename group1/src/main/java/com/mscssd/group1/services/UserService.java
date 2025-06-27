@@ -2,6 +2,7 @@ package com.mscssd.group1.services;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,5 +59,13 @@ public class UserService {
     public Optional<User> findByUserNameAndPassword(String userName, String password) {
         Optional<User> userOpt = userRepository.findByUserNameAndPassword(userName, password);
         return userOpt;
+    }
+
+    public List<User> getAllActiveUsers() {
+        return userRepository.findAllActive();
+    }
+
+    public long countUsers() {
+        return userRepository.count();
     }
 } 

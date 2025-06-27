@@ -53,4 +53,9 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findAllNotDeleted() {
         return productRepository.findByDeletedFalse();
     }
+
+    @Override
+    public long countNotDeleted() {
+        return productRepository.findByDeletedFalse().size();
+    }
 } 
