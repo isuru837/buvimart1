@@ -126,6 +126,7 @@
     <div class="manage-products-header">
       <h2>Manage Users</h2>
       <input type="text" class="admin-search-bar" placeholder="Search users..." [(ngModel)]="userSearchTerm" (input)="onUserSearchChange()" />
+      <button class="add-product-btn" (click)="onAddAdminUser()">Add Admin User</button>
     </div>
     <div *ngIf="isLoadingUsers" class="loading">Loading users...</div>
     <div *ngIf="usersError" class="error">{{ usersError }}</div>
@@ -152,7 +153,7 @@
   <div *ngIf="showAddProductOverlay" class="overlay-backdrop">
     <div class="overlay-panel">
       <button class="close-btn" (click)="closeAddProductOverlay()">&times;</button>
-      <app-product-add-update (exit)="closeAddProductOverlay()" (productSaved)="handleProductSaved()"></app-product-add-update>
+      <app-product-add-update [isNewMode]="true" [isEditMode]="false" [isViewMode]="false" (exit)="closeAddProductOverlay()" (productSaved)="handleProductSaved()"></app-product-add-update>
     </div>
   </div>
 
@@ -224,6 +225,13 @@
         <button class="btn save-btn" (click)="onUserSave()" [disabled]="!userActiveChanged">Save</button>
         <button class="btn exit-btn" (click)="closeUserOverlay()">Exit</button>
       </div>
+    </div>
+  </div>
+
+  <div *ngIf="showAddAdminUserOverlay" class="overlay-backdrop">
+    <div class="overlay-panel">
+      <button class="close-btn" (click)="closeAddAdminUserOverlay()">&times;</button>
+      <app-admin-user-create (exit)="closeAddAdminUserOverlay()" (userCreated)="handleAdminUserCreated()"></app-admin-user-create>
     </div>
   </div>
 </div>

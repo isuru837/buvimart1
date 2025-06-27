@@ -6,11 +6,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { ProductAddUpdate } from '../product-add-update/product-add-update';
 import { FormsModule } from '@angular/forms';
+import { AdminUserCreate } from '../admin-user-create/admin-user-create';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductAddUpdate],
+  imports: [CommonModule, FormsModule, ProductAddUpdate, AdminUserCreate],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css'
 })
@@ -64,6 +65,8 @@ export class AdminDashboard implements OnInit {
 
   userActiveChanged: boolean = false;
   initialUserActive: boolean = false;
+
+  showAddAdminUserOverlay = false;
 
   constructor(
     private authService: AuthService,
@@ -438,5 +441,19 @@ export class AdminDashboard implements OnInit {
         console.error('Failed to fetch total revenue:', err);
       }
     });
+  }
+
+  onAddAdminUser() {
+    this.showAddAdminUserOverlay = true;
+  }
+
+  closeAddAdminUserOverlay() {
+    this.showAddAdminUserOverlay = false;
+  }
+
+  handleAdminUserCreated() {
+    this.closeAddAdminUserOverlay();
+    this.fetchUsers();
+    this.fetchProductCount();
   }
 }
