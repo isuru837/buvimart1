@@ -6,11 +6,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { ProductAddUpdate } from '../product-add-update/product-add-update';
 import { FormsModule } from '@angular/forms';
+import { AdminUserCreate } from '../admin-user-create/admin-user-create';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, ProductAddUpdate],
+  imports: [CommonModule, FormsModule, ProductAddUpdate, AdminUserCreate],
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css'
 })
@@ -46,6 +47,27 @@ export class AdminDashboard implements OnInit {
   transactionsError = '';
   transactionSearchTerm: string = '';
 
+  selectedTransaction: any = null;
+  showTransactionOverlay: boolean = false;
+
+  showManageUsers = false;
+  users: any[] = [];
+  filteredUsers: any[] = [];
+  isLoadingUsers = false;
+  usersError = '';
+  userSearchTerm: string = '';
+
+  selectedUser: any = null;
+  showUserOverlay: boolean = false;
+
+  userOverlaySuccessMessage: string = '';
+  userOverlayErrorMessage: string = '';
+
+  userActiveChanged: boolean = false;
+  initialUserActive: boolean = false;
+
+  showAddAdminUserOverlay = false;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -65,6 +87,10 @@ export class AdminDashboard implements OnInit {
         this.router.navigate(['/']);
         return;
       }
+      this.fetchProductCount();
+      this.fetchUserCount();
+      this.fetchTransactionCount();
+      this.fetchTotalRevenue();
     });
   }
 
@@ -76,6 +102,7 @@ export class AdminDashboard implements OnInit {
   onManageProducts() {
     this.showManageProducts = true;
     this.showManageOrders = false;
+    this.showManageUsers = false;
     this.fetchProducts();
   }
 
@@ -200,6 +227,7 @@ export class AdminDashboard implements OnInit {
   onManageOrders() {
     this.showManageOrders = true;
     this.showManageProducts = false;
+    this.showManageUsers = false;
     this.fetchTransactions();
   }
 
@@ -244,5 +272,188 @@ export class AdminDashboard implements OnInit {
       (txn.customerName && txn.customerName.toLowerCase().includes(term)) ||
       (txn.transactionDate && txn.transactionDate.toLowerCase().includes(term))
     );
+  }
+
+  onTransactionRowClick(txn: any) {
+    console.log('clicked on '+JSON.stringify(txn.products))
+    this.selectedTransaction = txn;
+    this.showTransactionOverlay = true;
+    this.cdr.detectChanges()
+  }
+
+  closeTransactionOverlay() {
+    this.showTransactionOverlay = false;
+    this.selectedTransaction = null;
+  }
+
+  onManageUsers() {
+    this.showManageUsers = true;
+    this.showManageProducts = false;
+    this.showManageOrders = false;
+    this.fetchUsers();
+  }
+
+  fetchUsers() {
+    this.isLoadingUsers = true;
+    this.usersError = '';
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<any[]>(`${environment.apiUrl}/api/users/active`, { headers }).subscribe({
+      next: (data) => {
+        this.users = data;
+        this.filterUsers();
+        this.isLoadingUsers = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.logout();
+          return;
+        }
+        this.usersError = 'Failed to load users.';
+        this.isLoadingUsers = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  onUserSearchChange() {
+    this.filterUsers();
+  }
+
+  filterUsers() {
+    const term = this.userSearchTerm.trim().toLowerCase();
+    if (!term) {
+      this.filteredUsers = this.users;
+      return;
+    }
+    this.filteredUsers = this.users.filter(user =>
+      (user.userId && user.userId.toString().includes(term)) ||
+      (user.firstName && user.firstName.toLowerCase().includes(term)) ||
+      (user.lastName && user.lastName.toLowerCase().includes(term)) ||
+      (user.role && user.role.toLowerCase().includes(term))
+    );
+  }
+
+  onUserRowClick(user: any) {
+    this.selectedUser = { ...user };
+    this.showUserOverlay = true;
+    this.initialUserActive = user.active;
+    this.userActiveChanged = false;
+  }
+
+  closeUserOverlay() {
+    this.showUserOverlay = false;
+    this.selectedUser = null;
+  }
+
+  onUserSave() {
+    if (!this.userActiveChanged) return;
+    this.updateUserActiveStatus(this.selectedUser.userId, this.selectedUser.active);
+  
+  }
+
+  updateUserActiveStatus(userId: any, isActive: boolean) {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    const body = { userId, isActive };
+    this.http.put<any>(`${environment.apiUrl}/api/users/update-active-status`, body, { headers }).subscribe({
+      next: () => {
+        this.userOverlaySuccessMessage = 'User status updated successfully!';
+        this.userOverlayErrorMessage = '';
+        this.fetchUsers();
+        setTimeout(() => {
+          this.userOverlaySuccessMessage = '';
+          this.closeUserOverlay();
+        }, 2000);
+      },
+      error: (err) => {
+        this.userOverlayErrorMessage = 'Failed to update user status.';
+        this.userOverlaySuccessMessage = '';
+      }
+    });
+  }
+
+  fetchProductCount() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<{ productCount: number }>(`${environment.apiUrl}/api/products/count`, { headers }).subscribe({
+      next: (data) => {
+        this.stats.totalProducts = data.productCount;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to fetch product count:', err);
+      }
+    });
+  }
+
+  fetchUserCount() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<{ userCount: number }>(`${environment.apiUrl}/api/users/count`, { headers }).subscribe({
+      next: (data) => {
+        this.stats.totalUsers = data.userCount;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to fetch user count:', err);
+      }
+    });
+  }
+
+  fetchTransactionCount() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<{ transactionCount: number }>(`${environment.apiUrl}/api/transactions/count`, { headers }).subscribe({
+      next: (data) => {
+        this.stats.totalOrders = data.transactionCount;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to fetch transaction count:', err);
+      }
+    });
+  }
+
+  fetchTotalRevenue() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<{ totalTransactionValue: number }>(`${environment.apiUrl}/api/transactions/total-value`, { headers }).subscribe({
+      next: (data) => {
+        this.stats.revenue = data.totalTransactionValue;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to fetch total revenue:', err);
+      }
+    });
+  }
+
+  onAddAdminUser() {
+    this.showAddAdminUserOverlay = true;
+  }
+
+  closeAddAdminUserOverlay() {
+    this.showAddAdminUserOverlay = false;
+  }
+
+  handleAdminUserCreated() {
+    this.closeAddAdminUserOverlay();
+    this.fetchUsers();
+    this.fetchProductCount();
   }
 }

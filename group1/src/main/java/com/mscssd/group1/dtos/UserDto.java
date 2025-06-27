@@ -45,6 +45,7 @@ public class UserDto {
 
     private Role role;
     private boolean deleted;
+    private boolean isActive;
 
     // Default constructor
     public UserDto() {
@@ -63,6 +64,7 @@ public class UserDto {
         this.mobile = user.getMobile();
         this.role = user.getRole();
         this.deleted = user.isDeleted();
+        this.isActive = user.isActive();
     }
 
     // Getters and Setters
@@ -162,6 +164,14 @@ public class UserDto {
         this.deleted = deleted;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
     // Convert to User entity
     public User toEntity() {
         User user = new User();
@@ -177,6 +187,7 @@ public class UserDto {
         user.setMobile(this.mobile);
         user.setRole(this.role);
         user.setDeleted(this.deleted);
+        user.setIsActive(true);
         return user;
     }
 
@@ -191,6 +202,7 @@ public class UserDto {
                 ", mobile='" + mobile + '\'' +
                 ", role=" + role +
                 ", deleted=" + deleted +
+                ", isActive=" + isActive +
                 '}';
     }
 } 

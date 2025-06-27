@@ -277,14 +277,34 @@
 
 .overlay-panel {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-  padding: 2rem;
-  min-width: 350px;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  padding: 2.5rem 2rem 2rem 2rem;
+  min-width: 400px;
   max-width: 90vw;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.overlay-panel h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .close-btn {
@@ -375,4 +395,75 @@
 .admin-search-bar:focus {
   border-color: #007bff;
   outline: none;
+}
+
+.user-details-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: #f8f9fa;
+  padding: 1.5rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  margin-bottom: 1.5rem;
+}
+
+.user-details-view div {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+}
+
+.user-details-view strong {
+  min-width: 110px;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.user-details-view input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #28a745;
+}
+
+/* Beautify Save and Exit buttons in overlay */
+.form-actions .save-btn {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.form-actions .save-btn:hover {
+  background-color: #218838;
+}
+.form-actions .exit-btn {
+  background-color: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.7rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.form-actions .exit-btn:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.success-message {
+  color: #155724;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
 }

@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './sign-up.html',
   styleUrl: './sign-up.css'
 })
@@ -20,15 +23,25 @@ export class SignUp {
     addressLine3: '',
     email: '',
     mobile: '',
-    role: 'REG-USER'
+    role: 'REG_USER'
   };
 
-  constructor(private router: Router) {}
+  errorMessage: string = '';
+  successMessage: string = '';
+
+  constructor(private router: Router, private http: HttpClient) {}
 
   onSubmit() {
-    console.log('Submitted:', this.user);
-    // You can send this object to your backend via a service
-    // Example: this.authService.register(this.user).subscribe(...)
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.http.post(`${environment.apiUrl}/api/users/register`, this.user).subscribe({
+      next: (res) => {
+        this.successMessage = 'Registration successful!';
+      },
+      error: (err) => {
+        this.errorMessage = err?.error?.message || 'Registration failed.';
+      }
+    });
   }
 
   goBack() {

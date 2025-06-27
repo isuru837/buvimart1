@@ -61,7 +61,9 @@ public class TransactionController extends BaseController {
                         .map(tp -> new TransactionProductDTO(
                             transaction.getTransactionId(),
                             tp.getProduct().getId(),
-                            tp.getProduct().getName()
+                            tp.getProduct().getName(),
+                            tp.getPriceAtTransaction(),
+                            tp.getQuantity()
                         ))
                         .collect(Collectors.toList());
 
@@ -70,6 +72,7 @@ public class TransactionController extends BaseController {
                         transaction.getTransactionDate(),
                         transaction.getCustomer().getUserId(),
                         transaction.getCustomer().getFirstName() + " " + transaction.getCustomer().getLastName(),
+                        transaction.getTransactionValue(),
                         productDTOs
                     );
                 })
@@ -148,5 +151,19 @@ public class TransactionController extends BaseController {
 
         TransactionProductDto savedTransaction = transactionService.saveTransactionWithProducts(transactionDto);
         return ResponseEntity.ok(savedTransaction);
+    }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<java.util.Map<String, Long>> getTransactionCount() {
+        long count = transactionService.countTransactions();
+        return ResponseEntity.ok(java.util.Map.of("transactionCount", count));
+    }
+
+    @GetMapping("/total-value")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<java.util.Map<String, Double>> getTotalTransactionValue() {
+        double totalValue = transactionService.getTotalTransactionValue();
+        return ResponseEntity.ok(java.util.Map.of("totalTransactionValue", totalValue));
     }
 } 

@@ -81,4 +81,13 @@ public class ProductController {
         List<Product> products = productService.findAllNotDeleted();
         return ResponseEntity.ok(products);
     }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Long>> getProductCount() {
+        long count = productService.countNotDeleted();
+        Map<String, Long> response = new HashMap<>();
+        response.put("productCount", count);
+        return ResponseEntity.ok(response);
+    }
 } 

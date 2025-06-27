@@ -39,7 +39,7 @@ public class ApiAuditInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        try {
+       
             String username = "anonymous";
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
@@ -57,16 +57,21 @@ public class ApiAuditInterceptor implements HandlerInterceptor {
             }
 
             // Create ResponseEntity with the actual response body
+            Object body;
+            try {
+                // Try to parse as JSON first
+                body = responseBody.isEmpty() ? null : objectMapper.readValue(responseBody, Object.class);
+            } catch (IOException e) {
+                // If JSON parsing fails, use the raw string
+                body = responseBody;
+            }
+
             ResponseEntity<?> responseEntity = ResponseEntity
                 .status(response.getStatus())
-                .body(responseBody.isEmpty() ? null : objectMapper.readValue(responseBody, Object.class));
+                .body(body);
 
             apiAuditService.logApiCall(request, responseEntity, username);
-        } catch (IOException e) {
-            logger.error("Failed to read response body during API audit", e);
-        } catch (Exception e) {
-            logger.error("Unexpected error during API audit", e);
-        }
+      
     }
 
     public String getRequestBody(HttpServletRequest request) throws IOException {

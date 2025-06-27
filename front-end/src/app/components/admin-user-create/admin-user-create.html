@@ -1,6 +1,6 @@
 <div class="sign-up-container">
-  <form (ngSubmit)="onSubmit()" #signUpForm="ngForm">
-    <h2>Sign Up</h2>
+  <form (ngSubmit)="onSubmit()" #adminUserForm="ngForm">
+    <h2>Add Admin User</h2>
     <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
     <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
     
@@ -67,7 +67,17 @@
       </label>
     </div>
 
-    <button type="submit" class="btn">Sign Up</button>
-    <button type="button" class="btn back-btn" (click)="goBack()">Back to Products</button>
+    <div class="form-group">
+      <label>
+        Role:
+        <input type="text" name="role" [value]="'ADMIN'" disabled />
+      </label>
+    </div>
+
+    <div class="button-group">
+      <button type="submit" class="btn">Save</button>
+      <button type="button" class="btn clear-btn" (click)="onClear()">Clear</button>
+      <button type="button" class="btn exit-btn" (click)="onExit()">Exit</button>
+    </div>
   </form>
-</div>
+</div> 

@@ -17,4 +17,6 @@ public interface TransactionService extends BaseService<Transaction, Long> {
     List<Transaction> findByDateRange(LocalDate startDate, LocalDate endDate);
     List<Transaction> findByProductId(Long productId);
     List<Transaction> findTransactionsWithFilters(LocalDate startDate, LocalDate endDate, Long customerId, Long productId);
+    long countTransactions();
+    double getTotalTransactionValue();
 } 
