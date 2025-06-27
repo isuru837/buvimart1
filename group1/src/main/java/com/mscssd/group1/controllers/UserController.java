@@ -106,4 +106,11 @@ public class UserController extends BaseController {
         userService.updateUser(user);
         return ResponseEntity.ok(Map.of("message", "User active status updated successfully"));
     }
+
+    @GetMapping("/count")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Long>> getUserCount() {
+        long count = userService.countUsers();
+        return ResponseEntity.ok(Map.of("userCount", count));
+    }
 } 

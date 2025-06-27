@@ -6,4 +6,5 @@ import java.util.List;
 public interface ProductService extends BaseService<Product, Long> {
     // Additional product-specific service methods can be added here
     List<Product> findAllNotDeleted();
+    long countNotDeleted();
 } 

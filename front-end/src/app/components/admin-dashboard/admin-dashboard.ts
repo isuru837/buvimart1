@@ -84,6 +84,10 @@ export class AdminDashboard implements OnInit {
         this.router.navigate(['/']);
         return;
       }
+      this.fetchProductCount();
+      this.fetchUserCount();
+      this.fetchTransactionCount();
+      this.fetchTotalRevenue();
     });
   }
 
@@ -368,6 +372,70 @@ export class AdminDashboard implements OnInit {
       error: (err) => {
         this.userOverlayErrorMessage = 'Failed to update user status.';
         this.userOverlaySuccessMessage = '';
+      }
+    });
+  }
+
+  fetchProductCount() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<{ productCount: number }>(`${environment.apiUrl}/api/products/count`, { headers }).subscribe({
+      next: (data) => {
+        this.stats.totalProducts = data.productCount;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to fetch product count:', err);
+      }
+    });
+  }
+
+  fetchUserCount() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<{ userCount: number }>(`${environment.apiUrl}/api/users/count`, { headers }).subscribe({
+      next: (data) => {
+        this.stats.totalUsers = data.userCount;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to fetch user count:', err);
+      }
+    });
+  }
+
+  fetchTransactionCount() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<{ transactionCount: number }>(`${environment.apiUrl}/api/transactions/count`, { headers }).subscribe({
+      next: (data) => {
+        this.stats.totalOrders = data.transactionCount;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to fetch transaction count:', err);
+      }
+    });
+  }
+
+  fetchTotalRevenue() {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+    this.http.get<{ totalTransactionValue: number }>(`${environment.apiUrl}/api/transactions/total-value`, { headers }).subscribe({
+      next: (data) => {
+        this.stats.revenue = data.totalTransactionValue;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Failed to fetch total revenue:', err);
       }
     });
   }

@@ -39,7 +39,7 @@ public class ApiAuditInterceptor implements HandlerInterceptor {
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        try {
+       
             String username = "anonymous";
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null && authentication.isAuthenticated()) {
@@ -71,9 +71,7 @@ public class ApiAuditInterceptor implements HandlerInterceptor {
                 .body(body);
 
             apiAuditService.logApiCall(request, responseEntity, username);
-        } catch (Exception e) {
-            logger.error("Unexpected error during API audit", e);
-        }
+      
     }
 
     public String getRequestBody(HttpServletRequest request) throws IOException {
