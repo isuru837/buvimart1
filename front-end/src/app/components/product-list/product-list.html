@@ -1,3 +1,5 @@
+
+
 <div class="product-grid">
   <!-- Loading state -->
   <div *ngIf="isLoadingState" class="loading">
@@ -20,6 +22,10 @@
     <h3>{{ product.name }}</h3>
     <p>💰 Price: ${{ product.price }}</p>
     <p>📦 Quantity: {{ product.stockQuantity }}</p>
+    <div class="product-actions">
+      <button class="btn buy-btn" (click)="onBuyNow(product)">Buy now</button>
+      <button class="btn cart-btn" (click)="onAddToCart(product)">To Cart</button>
+    </div>
   </div>
 </div>
   

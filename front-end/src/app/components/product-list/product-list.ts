@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { SearchService } from '../../services/search.service';
 import { Subscription, timeout, catchError, of } from 'rxjs';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-product-list',
@@ -23,7 +24,8 @@ export class ProductList implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private searchService: SearchService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private cartService: CartService
   ) {}
 
   // Getter for debugging
@@ -145,5 +147,14 @@ export class ProductList implements OnInit, OnDestroy {
       });
       console.log('Filtered products:', this.filteredProducts);
     }
+  }
+
+  onBuyNow(product: any) {
+    // TODO: Implement buy now logic
+    console.log('Buy Now clicked for product:', product);
+  }
+
+  onAddToCart(product: any) {
+    this.cartService.addToCart(product);
   }
 }

@@ -10,19 +10,43 @@
       placeholder="Search products..." 
       class="search-bar" 
       (input)="onSearchChange($event)" />
+    <span class="cart-icon" style="position: relative; font-size: 1.7rem; margin-left: 1rem; vertical-align: middle; cursor: pointer;" (click)="showCartOverlay = true">
+      🛒
+      <span *ngIf="cartProducts.length > 0" class="cart-badge">{{ cartProducts.length }}</span>
+    </span>
   </div>
 
   <div class="right">
     <ng-container *ngIf="!authService.isLoggedIn(); else userMenu">
-      <button class="btn" routerLink="/sign-in">Sign in</button>
-      <button class="btn" routerLink="/sign-up">Sign Up</button>
+      <button class="btn" routerLink="/sign-in" (click)="showCartOverlay = false">Sign in</button>
+      <button class="btn" routerLink="/sign-up" (click)="showCartOverlay = false">Sign Up</button>
     </ng-container>
     <ng-template #userMenu>
-      <app-user-menu></app-user-menu>
+      <app-user-menu (loggedOut)="showCartOverlay = false"></app-user-menu>
     </ng-template>
   </div>
 </header>
 <main>
-  <router-outlet></router-outlet>
+  <router-outlet *ngIf="!showCartOverlay"></router-outlet>
 </main>
+
+<div *ngIf="showCartOverlay" class="overlay-backdrop">
+  <div class="overlay-panel" style="min-width: 500px; max-width: 90vw;">
+    <button class="close-btn" (click)="showCartOverlay = false">&times;</button>
+    <app-shopping-cart [cartProducts]="cartProducts" (continueShopping)="onContinueShopping()" (removeFromCart)="onRemoveFromCart($event)" (completeTransaction)="onCompleteTransaction($event)">
+      <ng-container *ngIf="cartProducts.length === 0">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200px;">
+          <button class="btn" (click)="showCartOverlay = false">Continue Shopping</button>
+        </div>
+      </ng-container>
+    </app-shopping-cart>
+  </div>
+</div>
+
+<app-login-popup 
+  *ngIf="showLoginPopup" 
+  message="Please sign in to complete your transaction."
+  (login)="onLoginPopupLogin()"
+  (exit)="onLoginPopupExit()">
+</app-login-popup>
 

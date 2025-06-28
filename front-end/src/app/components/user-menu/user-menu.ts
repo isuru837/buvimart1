@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -89,6 +89,7 @@ import { ClickOutsideDirective } from '../../directives/click-outside.directive'
 })
 export class UserMenu {
   isOpen = false;
+  @Output() loggedOut = new EventEmitter<void>();
 
   constructor(
     public authService: AuthService,
@@ -103,5 +104,6 @@ export class UserMenu {
     this.authService.logout();
     this.isOpen = false;
     this.router.navigate(['/']);
+    this.loggedOut.emit();
   }
 } 
