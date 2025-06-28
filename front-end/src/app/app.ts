@@ -8,6 +8,7 @@ import { SearchService } from './services/search.service';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
+import { CartService } from './services/cart.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,8 @@ export class App implements OnInit {
     public authService: AuthService,
     private searchService: SearchService,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private cartService: CartService
   ) {}
 
   ngOnInit() {
@@ -49,6 +51,10 @@ export class App implements OnInit {
         }
       }
     });
+    // Subscribe to cart changes
+    this.cartService.cartProducts$.subscribe(products => {
+      this.cartProducts = products;
+    });
   }
 
   onSearchChange(event: Event) {
@@ -63,18 +69,11 @@ export class App implements OnInit {
   }
 
   onAddToCart(product: any) {
-    const existing = this.cartProducts.find((p) => p.id === product.id);
-    if (existing) {
-      if (existing.quantity < existing.stockQuantity) {
-        existing.quantity++;
-      }
-    } else {
-      this.cartProducts.push({ ...product, quantity: 1 });
-    }
+    this.cartService.addToCart(product);
   }
 
   onRemoveFromCart(product: any) {
-    this.cartProducts = this.cartProducts.filter(p => p.id !== product.id);
+    this.cartService.removeFromCart(product);
   }
 
   async onCompleteTransaction(products: any[]) {
@@ -101,7 +100,7 @@ export class App implements OnInit {
     });
     try {
       await this.http.post(`${environment.apiUrl}/api/transactions/create`, requestBody, { headers }).toPromise();
-      this.cartProducts = [];
+      this.cartService.clearCart();
       this.showCartOverlay = false;
       alert('Transaction completed successfully!');
     } catch (err) {
