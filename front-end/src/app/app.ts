@@ -3,6 +3,7 @@ import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { UserMenu } from './components/user-menu/user-menu';
 import { ShoppingCart } from './components/shopping-cart/shopping-cart';
 import { ProductList } from './components/product-list/product-list';
+import { LoginPopup } from './components/login-popup/login-popup';
 import { AuthService } from './services/auth.service';
 import { SearchService } from './services/search.service';
 import { CommonModule } from '@angular/common';
@@ -13,7 +14,7 @@ import { CartService } from './services/cart.service';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, UserMenu, ShoppingCart, CommonModule],
+  imports: [RouterOutlet, RouterLink, UserMenu, ShoppingCart, LoginPopup, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -21,6 +22,7 @@ export class App implements OnInit {
   protected title = 'front-end';
 
   showCartOverlay = false;
+  showLoginPopup = false;
   cartProducts: any[] = [];
 
   constructor(
@@ -78,6 +80,11 @@ export class App implements OnInit {
 
   async onCompleteTransaction(products: any[]) {
     if (!products || products.length === 0) return;
+    if (!this.authService.isLoggedIn()) {
+      this.showCartOverlay = false;
+      this.showLoginPopup = true;
+      return;
+    }
     const user = this.authService.getCurrentUser() || {};
     const transactionValue = products.reduce((sum, p) => sum + (p.price * p.quantity), 0);
     const now = new Date();
@@ -107,5 +114,13 @@ export class App implements OnInit {
       alert('Failed to complete transaction.');
       console.error(err);
     }
+  }
+
+  onLoginPopupLogin() {
+    this.showLoginPopup = false;
+  }
+
+  onLoginPopupExit() {
+    this.showLoginPopup = false;
   }
 }

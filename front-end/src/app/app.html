@@ -18,11 +18,11 @@
 
   <div class="right">
     <ng-container *ngIf="!authService.isLoggedIn(); else userMenu">
-      <button class="btn" routerLink="/sign-in">Sign in</button>
-      <button class="btn" routerLink="/sign-up">Sign Up</button>
+      <button class="btn" routerLink="/sign-in" (click)="showCartOverlay = false">Sign in</button>
+      <button class="btn" routerLink="/sign-up" (click)="showCartOverlay = false">Sign Up</button>
     </ng-container>
     <ng-template #userMenu>
-      <app-user-menu></app-user-menu>
+      <app-user-menu (loggedOut)="showCartOverlay = false"></app-user-menu>
     </ng-template>
   </div>
 </header>
@@ -42,4 +42,11 @@
     </app-shopping-cart>
   </div>
 </div>
+
+<app-login-popup 
+  *ngIf="showLoginPopup" 
+  message="Please sign in to complete your transaction."
+  (login)="onLoginPopupLogin()"
+  (exit)="onLoginPopupExit()">
+</app-login-popup>
 
