@@ -71,8 +71,8 @@
           <tr *ngFor="let item of selectedTransaction?.products">
             <td>{{ item.productName || 'Product' }}</td>
             <td>{{ item.quantity }}</td>
-            <td>${{ item.price?.toFixed(2) || '0.00' }}</td>
-            <td>${{ (item.totalPrice || (item.price * item.quantity))?.toFixed(2) || '0.00' }}</td>
+            <td>${{ item.priceAtTransaction?.toFixed(2) || '0.00' }}</td>
+            <td>${{ (item.totalPrice || (item.priceAtTransaction * item.quantity))?.toFixed(2) || '0.00' }}</td>
           </tr>
         </tbody>
       </table>

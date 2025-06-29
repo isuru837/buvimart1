@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { UserMenu } from './components/user-menu/user-menu';
 import { ShoppingCart } from './components/shopping-cart/shopping-cart';
@@ -31,7 +31,9 @@ export class App implements OnInit {
     private searchService: SearchService,
     private router: Router,
     private http: HttpClient,
-    private cartService: CartService
+    private cartService: CartService,
+    private cdr:ChangeDetectorRef,
+    private zone:NgZone
   ) {}
 
   ngOnInit() {
@@ -108,8 +110,12 @@ export class App implements OnInit {
     });
     try {
       await this.http.post(`${environment.apiUrl}/api/transactions/create`, requestBody, { headers }).toPromise();
-      this.showCartOverlay = false;
-      this.showTransactionSuccessPopup = true;
+      this.zone.run(()=>{
+        this.showCartOverlay = false;
+        this.showTransactionSuccessPopup = true;
+        this.cdr.detectChanges();
+      })
+      
     } catch (err) {
       alert('Failed to complete transaction.');
       console.error(err);
