@@ -50,3 +50,11 @@
   (exit)="onLoginPopupExit()">
 </app-login-popup>
 
+<app-login-popup
+  *ngIf="showTransactionSuccessPopup"
+  [message]="'Transaction completed successfully!'"
+  [showLoginButton]="false"
+  [okButtonText]="'OK'"
+  (ok)="onTransactionSuccessOk()">
+</app-login-popup>
+
