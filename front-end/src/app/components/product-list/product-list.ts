@@ -6,6 +6,7 @@ import { SearchService } from '../../services/search.service';
 import { Subscription, timeout, catchError, of } from 'rxjs';
 import { CartService } from '../../services/cart.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-product-list',
@@ -29,6 +30,7 @@ export class ProductList implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private cartService: CartService,
     private router: Router,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -99,8 +101,14 @@ export class ProductList implements OnInit, OnDestroy {
             return;
           }
           
-          this.products = data;
-          this.filteredProducts = data;
+          // Filter out products with stockQuantity 0 for REG_USER
+          const user = this.authService.getCurrentUser();
+          if (user && user.role === 'REG_USER') {
+            this.products = data.filter(product => product.stockQuantity > 0);
+          } else {
+            this.products = data;
+          }
+          this.filteredProducts = [...this.products];
           this.isLoading = false;
           
           this.cdr.detectChanges();

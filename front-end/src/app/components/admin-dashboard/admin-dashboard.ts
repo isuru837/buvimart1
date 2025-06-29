@@ -32,6 +32,7 @@ export class AdminDashboard implements OnInit {
   showAddProductOverlay = false;
 
   showMenuIndex: number | null = null;
+  expandUpMenuIndex: number | null = null;
 
   selectedProduct: any = null;
   showViewProductOverlay: boolean = false;
@@ -160,7 +161,26 @@ export class AdminDashboard implements OnInit {
   }
 
   onMenuClick(index: number) {
-    this.showMenuIndex = this.showMenuIndex === index ? null : index;
+    if (this.showMenuIndex === index) {
+      this.showMenuIndex = null;
+      this.expandUpMenuIndex = null;
+      return;
+    }
+    this.showMenuIndex = index;
+    setTimeout(() => {
+      const btn = document.querySelectorAll('.menu-btn')[index] as HTMLElement;
+      const menu = document.querySelectorAll('.menu-dropdown')[index] as HTMLElement;
+      if (btn && menu) {
+        const btnRect = btn.getBoundingClientRect();
+        const menuHeight = menu.offsetHeight;
+        const spaceBelow = window.innerHeight - btnRect.bottom;
+        if (spaceBelow < menuHeight + 10) {
+          this.expandUpMenuIndex = index;
+        } else {
+          this.expandUpMenuIndex = null;
+        }
+      }
+    }, 0);
   }
 
   onViewProduct(product: any) {

@@ -38,10 +38,13 @@ public class ProductController {
         
         // Get and print the client IP address
         String clientIP = getClientIPAddress(request);
-        System.out.println("Request from IP: " + clientIP);
+        // System.out.println("Request from IP: " + clientIP);
         
         if (rateLimiter.acquirePermission()) {
-            List<Product> products = productService.findAll();
+            List<Product> products = productService.findAll()
+                .stream()
+                .filter(product -> product.getStockQuantity() != null && product.getStockQuantity() > 0)
+                .toList();
             return ResponseEntity.ok(products);
         } else {
             Map<String, String> response = new HashMap<>();
