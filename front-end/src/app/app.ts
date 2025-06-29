@@ -24,6 +24,7 @@ export class App implements OnInit {
   showCartOverlay = false;
   showLoginPopup = false;
   cartProducts: any[] = [];
+  showTransactionSuccessPopup = false;
 
   constructor(
     public authService: AuthService,
@@ -107,9 +108,8 @@ export class App implements OnInit {
     });
     try {
       await this.http.post(`${environment.apiUrl}/api/transactions/create`, requestBody, { headers }).toPromise();
-      this.cartService.clearCart();
       this.showCartOverlay = false;
-      alert('Transaction completed successfully!');
+      this.showTransactionSuccessPopup = true;
     } catch (err) {
       alert('Failed to complete transaction.');
       console.error(err);
@@ -122,5 +122,10 @@ export class App implements OnInit {
 
   onLoginPopupExit() {
     this.showLoginPopup = false;
+  }
+
+  onTransactionSuccessOk() {
+    this.showTransactionSuccessPopup = false;
+    this.cartService.clearCart();
   }
 }

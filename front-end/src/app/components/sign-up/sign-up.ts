@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -29,7 +29,12 @@ export class SignUp {
   errorMessage: string = '';
   successMessage: string = '';
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(
+    private router: Router,
+     private http: HttpClient,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
+  ) {}
 
   onSubmit() {
     this.errorMessage = '';
@@ -39,7 +44,14 @@ export class SignUp {
         this.successMessage = 'Registration successful!';
       },
       error: (err) => {
-        this.errorMessage = err?.error?.message || 'Registration failed.';
+        this.zone.run(() => {
+        console.log('Error response:', err);
+        console.log('Error object:', err.error);
+        console.log('Error message:', err.error?.error);
+        this.errorMessage = err?.error?.error || 'Registration failed.';
+        this.cdr.detectChanges();
+        console.log('Final error message:', this.errorMessage);}
+        )
       }
     });
   }

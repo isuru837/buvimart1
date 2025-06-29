@@ -10,14 +10,16 @@ import { Router } from '@angular/router';
     <div class="popup-overlay" (click)="onExit()">
       <div class="popup-content" (click)="$event.stopPropagation()">
         <div class="popup-header">
-          <h3>Login Required</h3>
+          <h3 *ngIf="showLoginButton">Login Required</h3>
+          <h3 *ngIf="!showLoginButton">Message</h3>
         </div>
         <div class="popup-body">
           <p>{{ message }}</p>
         </div>
         <div class="popup-footer">
-          <button class="btn btn-primary" (click)="onLogin()">Login</button>
-          <button class="btn btn-secondary" (click)="onExit()">Exit</button>
+          <button *ngIf="showLoginButton" class="btn btn-primary" (click)="onLogin()">Login</button>
+          <button *ngIf="showLoginButton" class="btn btn-secondary" (click)="onExit()">Exit</button>
+          <button *ngIf="!showLoginButton" class="btn btn-primary" (click)="onOk()">{{ okButtonText }}</button>
         </div>
       </div>
     </div>
@@ -103,8 +105,11 @@ import { Router } from '@angular/router';
 })
 export class LoginPopup {
   @Input() message: string = 'Please sign in to complete your transaction.';
+  @Input() okButtonText: string = 'OK';
+  @Input() showLoginButton: boolean = true;
   @Output() login = new EventEmitter<void>();
   @Output() exit = new EventEmitter<void>();
+  @Output() ok = new EventEmitter<void>();
 
   constructor(private router: Router) {}
 
@@ -115,5 +120,9 @@ export class LoginPopup {
 
   onExit() {
     this.exit.emit();
+  }
+
+  onOk() {
+    this.ok.emit();
   }
 } 
