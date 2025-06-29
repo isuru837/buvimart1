@@ -11,13 +11,11 @@ export class SearchService {
   constructor() { }
 
   setSearchTerm(term: string) {
-    console.log('SearchService: Setting search term:', term);
     this.searchTermSubject.next(term);
   }
 
   getSearchTerm(): string {
     const term = this.searchTermSubject.value;
-    console.log('SearchService: Getting search term:', term);
     return term;
   }
 } 

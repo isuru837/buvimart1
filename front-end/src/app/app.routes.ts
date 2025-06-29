@@ -15,5 +15,6 @@ export const routes: Routes = [
   { path: 'profile/edit', component: EditProfile },
   { path: 'admin', component: AdminDashboard },
   { path: 'purchase-history', component: PurchaseHistory },
+  { path: 'change-password', loadComponent: () => import('./components/change-password/change-password').then(m => m.ChangePassword) },
   { path: '**', redirectTo: '' }
 ];

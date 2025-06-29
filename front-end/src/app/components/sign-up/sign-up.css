@@ -43,6 +43,11 @@ form {
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
+.form-group input.ng-invalid.ng-touched {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.25);
+}
+
 .btn {
   width: 100%;
   padding: 0.75rem;
@@ -93,4 +98,44 @@ h2 {
   margin-bottom: 1rem;
   font-size: 0.9rem;
   text-align: center;
+}
+
+.validation-error {
+  color: #dc3545;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  padding: 0.25rem 0;
+}
+
+.password-requirements {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.password-requirements small {
+  color: #6c757d;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.password-requirements ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+  color: #495057;
+}
+
+.password-requirements li {
+  margin-bottom: 0.25rem;
+}
+
+.password-requirements small:last-child {
+  color: #28a745;
+  font-style: italic;
+  margin-top: 0.5rem;
+  display: block;
 }

@@ -36,17 +36,12 @@ export class ProductList implements OnInit, OnDestroy {
 
   // Getter for debugging
   get isLoadingState(): boolean {
-    console.log('Template checking isLoading:', this.isLoading);
     return this.isLoading;
   }
 
   ngOnInit() {
-    console.log('ProductList component initialized');
-    console.log('Initial isLoading state:', this.isLoading);
-    
     // Set up search subscription first
     this.searchSubscription = this.searchService.searchTerm$.subscribe(searchTerm => {
-      console.log('Search term changed:', searchTerm);
       this.filterProducts(searchTerm);
     });
     
@@ -84,7 +79,6 @@ export class ProductList implements OnInit, OnDestroy {
       .pipe(
         timeout(10000), // 10 second timeout
         catchError((error: HttpErrorResponse) => {
-          console.error('HTTP Error:', error);
           if (error.status === 0) {
             return of(null); // Network error
           }
@@ -121,14 +115,12 @@ export class ProductList implements OnInit, OnDestroy {
           if (this.loadingTimeout) {
             clearTimeout(this.loadingTimeout);
           }
-          console.error('Error fetching products:', error);
           if (error.name === 'TimeoutError') {
             this.errorMessage = 'Request timed out. Please try again.';
           } else {
             this.errorMessage = 'Failed to load products. Please try again later.';
           }
           this.isLoading = false;
-          console.log('Calling detectChanges');
           this.cdr.detectChanges();
         }
       });
@@ -136,22 +128,15 @@ export class ProductList implements OnInit, OnDestroy {
   }
 
   filterProducts(searchTerm: string) {
-    console.log('Filtering products with search term:', searchTerm);
-    console.log('Current products:', this.products);
-    
     if (!searchTerm.trim()) {
-      console.log('Empty search term - showing all products');
       this.filteredProducts = [...this.products];
     } else {
       const term = searchTerm.toLowerCase().trim();
-      console.log('Searching for term:', term);
       this.filteredProducts = this.products.filter(product => {
         const productName = product.name ? product.name.toLowerCase() : '';
         const matches = productName.includes(term);
-        console.log(`Product: ${product.name}, matches: ${matches}`);
         return matches;
       });
-      console.log('Filtered products:', this.filteredProducts);
     }
   }
 

@@ -9,6 +9,7 @@
     <a *ngIf="(authService.user$ | async)?.role === 'ADMIN'" routerLink="/admin" class="menu-item admin-item">Admin Dashboard</a>
     <a *ngIf="(authService.user$ | async)?.role !== 'ADMIN'" routerLink="/" class="menu-item">Products</a>
     <a *ngIf="(authService.user$ | async)?.role !== 'ADMIN'" routerLink="/purchase-history" class="menu-item">Purchase History</a>
+    <a  routerLink="/change-password" class="menu-item">Change password</a>
     <button (click)="logout()" class="menu-item">Sign Out</button>
   </div>
 </div> 
