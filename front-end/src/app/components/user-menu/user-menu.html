@@ -1,0 +1,14 @@
+<div class="user-menu" (clickOutside)="isOpen = false">
+  <button class="user-button" (click)="toggleMenu()">
+    <span class="username">{{ (authService.user$ | async)?.userName }}</span>
+    <span *ngIf="(authService.user$ | async)?.role === 'ADMIN'" class="admin-badge">ADMIN</span>
+  </button>
+  
+  <div class="menu-dropdown" *ngIf="isOpen">
+    <a routerLink="/profile" class="menu-item">Profile</a>
+    <a *ngIf="(authService.user$ | async)?.role === 'ADMIN'" routerLink="/admin" class="menu-item admin-item">Admin Dashboard</a>
+    <a *ngIf="(authService.user$ | async)?.role !== 'ADMIN'" routerLink="/" class="menu-item">Products</a>
+    <a *ngIf="(authService.user$ | async)?.role !== 'ADMIN'" routerLink="/purchase-history" class="menu-item">Purchase History</a>
+    <button (click)="logout()" class="menu-item">Sign Out</button>
+  </div>
+</div> 

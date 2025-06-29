@@ -27,6 +27,7 @@ public class ProductDetailDto {
         this.quantity = tp.getQuantity();
         this.priceAtTransaction = tp.getPriceAtTransaction();
         this.totalPrice = tp.getPriceAtTransaction() * tp.getQuantity();
+        this.price = tp.getProduct().getPrice();
     }
     
     // Getters and Setters

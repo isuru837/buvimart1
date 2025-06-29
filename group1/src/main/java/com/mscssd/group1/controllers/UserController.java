@@ -45,12 +45,12 @@ public class UserController extends BaseController {
             } else {
                 return ResponseEntity
                     .status(HttpStatus.TOO_MANY_REQUESTS)
-                    .body("Too many registration attempts. Please try again after an hour.");
+                    .body(Map.of("error", "Too many registration attempts. Please try again after an hour."));
             }
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.TOO_MANY_REQUESTS)
-                .body("Too many registration attempts. Please try again after an hour.");
+                .body(Map.of("error", "Too many registration attempts. Please try again after an hour."));
         }
     }
 
