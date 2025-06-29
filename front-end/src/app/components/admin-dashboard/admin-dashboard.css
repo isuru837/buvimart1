@@ -358,7 +358,7 @@
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   min-width: 140px;
-  z-index: 10;
+  z-index: 1000 !important;
   display: flex;
   flex-direction: column;
   padding: 0.5rem 0;
@@ -466,4 +466,15 @@
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
   font-size: 1rem;
+}
+
+.menu-dropdown.expand-up {
+  top: auto !important;
+  bottom: 100%;
+  transform: translateY(-8px);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.12);
+}
+
+.products-table, .products-table tbody, .products-table tr {
+  overflow: visible !important;
 }

@@ -86,7 +86,7 @@
             <button class="menu-btn" (click)="onMenuClick(i)">
               <span class="hamburger-icon">&#8942;</span>
             </button>
-            <div class="menu-dropdown" *ngIf="showMenuIndex === i">
+            <div class="menu-dropdown" *ngIf="showMenuIndex === i" [class.expand-up]="expandUpMenuIndex === i">
               <button (click)="onViewProduct(product)">View Product</button>
               <button (click)="onEditProduct(product)">Edit Product</button>
               <button (click)="onDeleteProduct(product)">Delete Product</button>
