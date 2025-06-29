@@ -29,6 +29,7 @@ export class EditProfile implements OnInit, OnDestroy {
 
   errorMessage: string = '';
   isLoading: boolean = false;
+  validationErrors: { [key: string]: string } = {};
   private userSubscription: Subscription;
 
   constructor(
@@ -64,10 +65,58 @@ export class EditProfile implements OnInit, OnDestroy {
     }
   }
 
+  // Username validation: minimum 8 characters
+  validateUsername(username: string): boolean {
+    if (!username || username.length < 8) {
+      this.validationErrors['userName'] = 'Username must be at least 8 characters long.';
+      return false;
+    }
+    delete this.validationErrors['userName'];
+    return true;
+  }
+
+  // Validate all fields
+  validateForm(): boolean {
+    this.validationErrors = {};
+    
+    const isUsernameValid = this.validateUsername(this.user.userName);
+    
+    // Check other required fields
+    if (!this.user.firstName?.trim()) {
+      this.validationErrors['firstName'] = 'First name is required.';
+    }
+    
+    if (!this.user.lastName?.trim()) {
+      this.validationErrors['lastName'] = 'Last name is required.';
+    }
+    
+    if (!this.user.email?.trim()) {
+      this.validationErrors['email'] = 'Email is required.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.user.email)) {
+      this.validationErrors['email'] = 'Please enter a valid email address.';
+    }
+    
+    if (!this.user.mobile?.trim()) {
+      this.validationErrors['mobile'] = 'Mobile number is required.';
+    }
+    
+    if (!this.user.addressLine1?.trim()) {
+      this.validationErrors['addressLine1'] = 'Address Line 1 is required.';
+    }
+    
+    return isUsernameValid && Object.keys(this.validationErrors).length === 0;
+  }
+
   onSubmit() {
     console.log('Form submitted with user data:', this.user);
     this.isLoading = true;
     this.errorMessage = '';
+
+    // Validate form before submission
+    if (!this.validateForm()) {
+      this.isLoading = false;
+      return;
+    }
 
     // Use the AuthService's updateUser method
     this.authService.updateUser(this.user).subscribe({
