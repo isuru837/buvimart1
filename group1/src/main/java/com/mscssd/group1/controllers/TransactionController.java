@@ -130,14 +130,18 @@ public class TransactionController extends BaseController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('REG_USER')")
     public ResponseEntity<TransactionProductDto> createTransaction(@RequestBody TransactionProductDto transactionDto, HttpServletRequest request) {
+        System.out.println("===== Here in Create Transaction =====");
         System.out.println(transactionDto);
         String authHeader = request.getHeader("Authorization");
+        System.out.println("Authorization  :"+authHeader);
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         String token = authHeader.substring(7);
         String userIdFromToken = tokenManager.extractUserId(token);
+        System.out.println("Token : "+token);
+        System.out.println("User Id From Token : "+userIdFromToken);
         
         if (!userIdFromToken.equals(transactionDto.getCustomerId().toString())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
