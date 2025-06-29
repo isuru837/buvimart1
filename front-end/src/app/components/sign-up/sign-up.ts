@@ -41,7 +41,22 @@ export class SignUp {
     this.successMessage = '';
     this.http.post(`${environment.apiUrl}/api/users/register`, this.user).subscribe({
       next: (res) => {
+        this.zone.run(() => {
         this.successMessage = 'Registration successful!';
+        this.user = {
+          userName: '',
+          password: '',
+          firstName: '',
+          lastName: '',
+          addressLine1: '',
+          addressLine2: '',
+          addressLine3: '',
+          email: '',
+          mobile: '',
+          role: 'REG_USER'
+        };
+        this.cdr.detectChanges();
+        })
       },
       error: (err) => {
         this.zone.run(() => {

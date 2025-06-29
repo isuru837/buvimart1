@@ -5,6 +5,7 @@ import com.mscssd.group1.models.Product;
 import com.mscssd.group1.services.ProductService;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,8 +33,12 @@ public class ProductController {
     }
     
     @GetMapping("/all")
-    public ResponseEntity<?> getAllProducts() {
+    public ResponseEntity<?> getAllProducts(HttpServletRequest request) {
         RateLimiter rateLimiter = rateLimiterRegistry.rateLimiter("productsRateLimiter");
+        
+        // Get and print the client IP address
+        String clientIP = getClientIPAddress(request);
+        System.out.println("Request from IP: " + clientIP);
         
         if (rateLimiter.acquirePermission()) {
             List<Product> products = productService.findAll();
@@ -45,6 +50,20 @@ public class ProductController {
                 .status(HttpStatus.TOO_MANY_REQUESTS)
                 .body(response);
         }
+    }
+    
+    private String getClientIPAddress(HttpServletRequest request) {
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        if (xForwardedFor != null && !xForwardedFor.isEmpty() && !"unknown".equalsIgnoreCase(xForwardedFor)) {
+            return xForwardedFor.split(",")[0];
+        }
+        
+        String xRealIP = request.getHeader("X-Real-IP");
+        if (xRealIP != null && !xRealIP.isEmpty() && !"unknown".equalsIgnoreCase(xRealIP)) {
+            return xRealIP;
+        }
+        
+        return request.getRemoteAddr();
     }
     
     @GetMapping("/{id}")
