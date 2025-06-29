@@ -11,10 +11,10 @@ public class ManualPasswordEncoder {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(rawPassword);
         
-        System.out.println("Original Password: " + rawPassword);
-        System.out.println("Encoded Password: " + encodedPassword);
-        System.out.println("\nTo verify this password later, use:");
-        System.out.println("boolean matches = encoder.matches(\"" + rawPassword + "\", \"" + encodedPassword + "\");");
+        // System.out.println("Original Password: " + rawPassword);
+        // System.out.println("Encoded Password: " + encodedPassword);
+        // System.out.println("\nTo verify this password later, use:");
+        // System.out.println("boolean matches = encoder.matches(\"" + rawPassword + "\", \"" + encodedPassword + "\");");
     }
 
     public String encode(CharSequence rawPassword) {

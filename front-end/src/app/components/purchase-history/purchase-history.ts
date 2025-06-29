@@ -19,6 +19,7 @@ export class PurchaseHistory implements OnInit {
   errorMessage = '';
   showTransactionOverlay = false;
   selectedTransaction: any = null;
+  productMap: { [id: number]: string } = {};
 
   constructor(
     private authService: AuthService,
@@ -41,37 +42,54 @@ export class PurchaseHistory implements OnInit {
   loadPurchaseHistory() {
     this.isLoading = true;
     this.errorMessage = '';
-    
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) {
       this.errorMessage = 'User not found. Please sign in again.';
       this.isLoading = false;
       return;
     }
-
-    this.http.get<any[]>(`${environment.apiUrl}/api/transactions/customer/${currentUser.userId}`, { headers }).subscribe({
-      next: (data) => {
-        this.zone.run(()=>{
-          this.transactions = data;
-          this.isLoading = false;
-          this.dcr.detectChanges();
-        })
-        
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          this.authService.logout();
-          this.router.navigate(['/sign-in']);
-          return;
+    // Fetch all products first
+    this.http.get<any[]>(`${environment.apiUrl}/api/products/all`).subscribe({
+      next: (products) => {
+        this.productMap = {};
+        for (const p of products) {
+          this.productMap[p.id] = p.name;
         }
-        this.errorMessage = 'Failed to load purchase history. Please try again.';
+        // Now fetch transactions
+        this.http.get<any[]>(`${environment.apiUrl}/api/transactions/customer/${currentUser.userId}`, { headers }).subscribe({
+          next: (data) => {
+            this.zone.run(()=>{
+              // Map product names into each transaction's products
+              for (const txn of data) {
+                if (txn.products) {
+                  for (const item of txn.products) {
+                    item.productName = this.productMap[item.productId] || 'Unknown Product';
+                  }
+                }
+              }
+              this.transactions = data;
+              this.isLoading = false;
+              this.dcr.detectChanges();
+            })
+          },
+          error: (err) => {
+            if (err.status === 401) {
+              this.authService.logout();
+              this.router.navigate(['/sign-in']);
+              return;
+            }
+            this.errorMessage = 'Failed to load purchase history. Please try again.';
+            this.isLoading = false;
+          }
+        });
+      },
+      error: () => {
+        this.errorMessage = 'Failed to load product names.';
         this.isLoading = false;
-        console.error('Error fetching purchase history:', err);
       }
     });
   }

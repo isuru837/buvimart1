@@ -113,8 +113,6 @@ export class AdminDashboard implements OnInit {
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
-    // LOGGING
-     console.log('is product loading Before :',this.isLoadingProducts);
     this.http.get<any[]>(`${environment.apiUrl}/api/products/all-admin`, { headers }).subscribe({
       next: (data) => {
         this.products = data;
@@ -122,7 +120,6 @@ export class AdminDashboard implements OnInit {
         this.isLoadingProducts = false;
         this.showManageProducts = true;
         this.cdr.detectChanges();
-        console.log('is product loading After :',this.isLoadingProducts);
       },
       error: (err) => {
         if (err.status === 401) {
@@ -132,10 +129,8 @@ export class AdminDashboard implements OnInit {
         this.productsError = 'Failed to load products.';
         this.isLoadingProducts = false;
         this.cdr.detectChanges();
-        console.error('Error fetching products:', err);
       }
     });
-    this.isLoadingProducts = false;
   }
 
   onAdminSearchChange() {
@@ -275,7 +270,6 @@ export class AdminDashboard implements OnInit {
   }
 
   onTransactionRowClick(txn: any) {
-    console.log('clicked on '+JSON.stringify(txn.products))
     this.selectedTransaction = txn;
     this.showTransactionOverlay = true;
     this.cdr.detectChanges()

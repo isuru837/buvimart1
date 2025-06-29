@@ -44,17 +44,14 @@ export class App implements OnInit, OnDestroy {
     // Subscribe to user changes to handle role-based routing
     this.authService.user$.subscribe(user => {
       if (user) {
-        console.log('User logged in, checking role:', user.role);
         if (user.role === 'ADMIN') {
           // If admin user is on the main page, redirect to admin dashboard
           if (this.router.url === '/') {
-            console.log('Admin user detected, redirecting to admin dashboard');
             this.router.navigate(['/admin']);
           }
         } else {
           // If regular user is on admin page, redirect to main page
           if (this.router.url === '/admin') {
-            console.log('Regular user on admin page, redirecting to main page');
             this.router.navigate(['/']);
           }
         }
@@ -86,7 +83,6 @@ export class App implements OnInit, OnDestroy {
 
   onSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
-    console.log('App: Search input changed to:', target.value);
     this.searchService.setSearchTerm(target.value);
   }
 
@@ -140,7 +136,6 @@ export class App implements OnInit, OnDestroy {
       
     } catch (err) {
       alert('Failed to complete transaction.');
-      console.error(err);
     }
   }
 

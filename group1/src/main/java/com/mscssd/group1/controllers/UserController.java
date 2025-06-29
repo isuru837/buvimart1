@@ -113,4 +113,38 @@ public class UserController extends BaseController {
         long count = userService.countUsers();
         return ResponseEntity.ok(Map.of("userCount", count));
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> payload, HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Missing or invalid Authorization header"));
+        }
+        String token = authHeader.substring(7);
+        String userIdFromToken = tokenManager.extractUserId(token);
+        if (userIdFromToken == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Invalid token"));
+        }
+        Long userId = Long.parseLong(userIdFromToken);
+        Optional<User> userOpt = userService.findById(userId);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found"));
+        }
+        User user = userOpt.get();
+        String oldPassword = payload.get("oldPassword");
+        String newPassword = payload.get("newPassword");
+        String retypeNewPassword = payload.get("retypeNewPassword");
+        if (oldPassword == null || newPassword == null || retypeNewPassword == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "All password fields are required"));
+        }
+        if (!com.mscssd.group1.util.Encoder.verifyPassword(oldPassword, user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Old password incorrect"));
+        }
+        if (!newPassword.equals(retypeNewPassword)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "New passwords do not match"));
+        }
+        user.setPassword(com.mscssd.group1.util.Encoder.encodePassword(newPassword));
+        userService.updateUser(user);
+        return ResponseEntity.ok(Map.of("message", "Password updated successfully"));
+    }
 } 

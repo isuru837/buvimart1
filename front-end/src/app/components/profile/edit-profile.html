@@ -11,9 +11,13 @@
           name="userName" 
           [(ngModel)]="user.userName" 
           required
+          minlength="8"
           #userName="ngModel">
-        <div class="error" *ngIf="userName.invalid && (userName.dirty || userName.touched)">
-          Username is required
+        <div class="error" *ngIf="validationErrors['userName']">
+          {{ validationErrors['userName'] }}
+        </div>
+        <div class="error" *ngIf="userName.invalid && (userName.dirty || userName.touched) && !validationErrors['userName']">
+          Username is required and must be at least 8 characters long.
         </div>
       </div>
 
@@ -26,7 +30,10 @@
           [(ngModel)]="user.firstName" 
           required
           #firstName="ngModel">
-        <div class="error" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched)">
+        <div class="error" *ngIf="validationErrors['firstName']">
+          {{ validationErrors['firstName'] }}
+        </div>
+        <div class="error" *ngIf="firstName.invalid && (firstName.dirty || firstName.touched) && !validationErrors['firstName']">
           First name is required
         </div>
       </div>
@@ -40,7 +47,10 @@
           [(ngModel)]="user.lastName" 
           required
           #lastName="ngModel">
-        <div class="error" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)">
+        <div class="error" *ngIf="validationErrors['lastName']">
+          {{ validationErrors['lastName'] }}
+        </div>
+        <div class="error" *ngIf="lastName.invalid && (lastName.dirty || lastName.touched) && !validationErrors['lastName']">
           Last name is required
         </div>
       </div>
@@ -55,7 +65,10 @@
           required
           email
           #email="ngModel">
-        <div class="error" *ngIf="email.invalid && (email.dirty || email.touched)">
+        <div class="error" *ngIf="validationErrors['email']">
+          {{ validationErrors['email'] }}
+        </div>
+        <div class="error" *ngIf="email.invalid && (email.dirty || email.touched) && !validationErrors['email']">
           Valid email is required
         </div>
       </div>
@@ -70,7 +83,10 @@
           required
           pattern="[0-9]{10}"
           #mobile="ngModel">
-        <div class="error" *ngIf="mobile.invalid && (mobile.dirty || mobile.touched)">
+        <div class="error" *ngIf="validationErrors['mobile']">
+          {{ validationErrors['mobile'] }}
+        </div>
+        <div class="error" *ngIf="mobile.invalid && (mobile.dirty || mobile.touched) && !validationErrors['mobile']">
           Valid 10-digit mobile number is required
         </div>
       </div>
@@ -84,7 +100,10 @@
           [(ngModel)]="user.addressLine1" 
           required
           #addressLine1="ngModel">
-        <div class="error" *ngIf="addressLine1.invalid && (addressLine1.dirty || addressLine1.touched)">
+        <div class="error" *ngIf="validationErrors['addressLine1']">
+          {{ validationErrors['addressLine1'] }}
+        </div>
+        <div class="error" *ngIf="addressLine1.invalid && (addressLine1.dirty || addressLine1.touched) && !validationErrors['addressLine1']">
           Address Line 1 is required
         </div>
       </div>
@@ -115,7 +134,7 @@
         <button 
           type="submit" 
           class="btn save-btn" 
-          [disabled]="editForm.invalid || isLoading">
+          [disabled]="editForm.invalid || isLoading || !isFormDirty()">
           {{ isLoading ? 'Saving...' : 'Save Changes' }}
         </button>
         <button 
