@@ -1,0 +1,81 @@
+<div class="purchase-history-container">
+  <div class="purchase-history-header">
+    <h1>Purchase History</h1>
+  </div>
+
+  <div class="purchase-history-content">
+    <div *ngIf="isLoading" class="loading">
+      Loading your purchase history...
+    </div>
+
+    <div *ngIf="errorMessage" class="error">
+      {{ errorMessage }}
+      <button (click)="loadPurchaseHistory()" class="retry-btn">Retry</button>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && transactions.length === 0" class="no-transactions">
+      <p>You haven't made any purchases yet.</p>
+      <button routerLink="/" class="btn">Start Shopping</button>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && transactions.length > 0" class="transactions-section">
+      <table class="transactions-table">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Transaction Date</th>
+            <th>Total Amount</th>
+            <th>Items</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transaction of transactions">
+            <td>{{ transaction.transactionId }}</td>
+            <td>{{ formatDate(transaction.transactionDate) }}</td>
+            <td>${{ transaction.transactionValue?.toFixed(2) || '0.00' }}</td>
+            <td>{{ transaction.products?.length || 0 }} item(s)</td>
+            <td>
+              <button (click)="viewTransactionDetails(transaction)" class="view-btn">View Details</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Transaction Details Overlay -->
+<div *ngIf="showTransactionOverlay" class="overlay-backdrop" (click)="closeTransactionOverlay()">
+  <div class="overlay-panel" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="closeTransactionOverlay()">&times;</button>
+    <div class="transaction-details-overlay">
+      <h3>Order Details</h3>
+      <div class="transaction-info">
+        <div><strong>Order ID:</strong> {{ selectedTransaction?.transactionId }}</div>
+        <div><strong>Date:</strong> {{ formatDate(selectedTransaction?.transactionDate) }}</div>
+        <div><strong>Total Amount:</strong> ${{ selectedTransaction?.transactionValue?.toFixed(2) || '0.00' }}</div>
+      </div>
+      
+      <h4>Products</h4>
+      <table class="products-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of selectedTransaction?.products">
+            <td>{{ item.productName || 'Product' }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.price?.toFixed(2) || '0.00' }}</td>
+            <td>${{ (item.totalPrice || (item.price * item.quantity))?.toFixed(2) || '0.00' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div> 
