@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { UserMenu } from './components/user-menu/user-menu';
 import { ShoppingCart } from './components/shopping-cart/shopping-cart';
@@ -6,7 +6,7 @@ import { ProductList } from './components/product-list/product-list';
 import { LoginPopup } from './components/login-popup/login-popup';
 import { AuthService } from './services/auth.service';
 import { SearchService } from './services/search.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { CartService } from './services/cart.service';
@@ -18,21 +18,27 @@ import { CartService } from './services/cart.service';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   protected title = 'front-end';
 
   showCartOverlay = false;
   showLoginPopup = false;
   cartProducts: any[] = [];
   showTransactionSuccessPopup = false;
+  private isBrowser: boolean;
 
   constructor(
     public authService: AuthService,
     private searchService: SearchService,
     private router: Router,
     private http: HttpClient,
-    private cartService: CartService
-  ) {}
+    private cartService: CartService,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit() {
     // Subscribe to user changes to handle role-based routing
@@ -58,7 +64,25 @@ export class App implements OnInit {
     this.cartService.cartProducts$.subscribe(products => {
       this.cartProducts = products;
     });
+
+    // Listen for custom event to open cart overlay (Buy Now functionality)
+    // Only add event listener if we're in browser environment
+    if (this.isBrowser) {
+      window.addEventListener('openCartOverlay', this.openCartOverlayHandler);
+    }
   }
+
+  ngOnDestroy() {
+    // Clean up event listener only if we're in browser environment
+    if (this.isBrowser) {
+      window.removeEventListener('openCartOverlay', this.openCartOverlayHandler);
+    }
+  }
+
+  private openCartOverlayHandler = () => {
+    this.showCartOverlay = true;
+    this.cdr.detectChanges();
+  };
 
   onSearchChange(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -108,8 +132,12 @@ export class App implements OnInit {
     });
     try {
       await this.http.post(`${environment.apiUrl}/api/transactions/create`, requestBody, { headers }).toPromise();
-      this.showCartOverlay = false;
-      this.showTransactionSuccessPopup = true;
+      this.zone.run(()=>{
+        this.showCartOverlay = false;
+        this.showTransactionSuccessPopup = true;
+        this.cdr.detectChanges();
+      })
+      
     } catch (err) {
       alert('Failed to complete transaction.');
       console.error(err);

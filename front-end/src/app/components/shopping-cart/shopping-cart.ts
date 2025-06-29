@@ -1,6 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CartService } from '../../services/cart.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -9,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './shopping-cart.html',
   styleUrl: './shopping-cart.css'
 })
-export class ShoppingCart {
+export class ShoppingCart implements OnInit, OnDestroy {
   @Input() cartProducts: any[] = [];
   @Output() cartChanged = new EventEmitter<any[]>();
   @Output() paymentSelectionChanged = new EventEmitter<any[]>();
@@ -19,6 +21,22 @@ export class ShoppingCart {
 
   // Track which products are selected for payment
   paymentSelection: { [productId: string]: boolean } = {};
+  private paymentSelectionSubscription!: Subscription;
+
+  constructor(private cartService: CartService) {}
+
+  ngOnInit() {
+    // Subscribe to payment selection changes from CartService
+    this.paymentSelectionSubscription = this.cartService.paymentSelection$.subscribe(selection => {
+      this.paymentSelection = selection;
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.paymentSelectionSubscription) {
+      this.paymentSelectionSubscription.unsubscribe();
+    }
+  }
 
   get paymentBucket() {
     return this.cartProducts.filter(p => this.paymentSelection[p.id]);
@@ -44,12 +62,11 @@ export class ShoppingCart {
 
   removeProduct(product: any) {
     this.removeFromCart.emit(product);
-    delete this.paymentSelection[product.id];
-    this.paymentSelectionChanged.emit(this.paymentBucket);
+    // CartService will handle removing from payment selection
   }
 
   togglePaymentSelection(product: any, event: any) {
-    this.paymentSelection[product.id] = event.target.checked;
+    this.cartService.togglePaymentSelection(product.id, event.target.checked);
     this.paymentSelectionChanged.emit(this.paymentBucket);
   }
 

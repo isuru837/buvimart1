@@ -6,8 +6,6 @@ import com.mscssd.group1.exceptions.AuthenticationException;
 import com.mscssd.group1.services.LoginService;
 import io.github.resilience4j.ratelimiter.RateLimiter;
 import io.github.resilience4j.ratelimiter.RateLimiterRegistry;
-import jakarta.security.auth.message.AuthException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { SearchService } from '../../services/search.service';
 import { Subscription, timeout, catchError, of } from 'rxjs';
 import { CartService } from '../../services/cart.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -20,13 +21,18 @@ export class ProductList implements OnInit, OnDestroy {
   errorMessage: string = '';
   private searchSubscription!: Subscription;
   private loadingTimeout: any;
+  private isBrowser: boolean;
 
   constructor(
     private http: HttpClient,
     private searchService: SearchService,
     private cdr: ChangeDetectorRef,
-    private cartService: CartService
-  ) {}
+    private cartService: CartService,
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   // Getter for debugging
   get isLoadingState(): boolean {
@@ -150,11 +156,27 @@ export class ProductList implements OnInit, OnDestroy {
   }
 
   onBuyNow(product: any) {
-    // TODO: Implement buy now logic
-    console.log('Buy Now clicked for product:', product);
+    // Add product to cart and select it for payment
+    this.cartService.addToCartAndSelect(product);
+    
+    // Navigate to home page to show the cart overlay
+    this.router.navigate(['/']);
+    
+    // Trigger cart overlay to open (this will be handled by the app component)
+    // We'll use a custom event or service to communicate this
+    this.triggerCartOverlay();
   }
 
   onAddToCart(product: any) {
     this.cartService.addToCart(product);
+  }
+
+  private triggerCartOverlay() {
+    // Only dispatch custom event if we're in browser environment
+    if (this.isBrowser) {
+      // Dispatch a custom event to trigger cart overlay
+      const event = new CustomEvent('openCartOverlay');
+      window.dispatchEvent(event);
+    }
   }
 }
