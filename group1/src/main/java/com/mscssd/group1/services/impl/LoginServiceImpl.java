@@ -42,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
                 throw new AuthenticationException(MessageConstant.USER_INACTIVE);
             }
             
-            System.out.println("Role Of User : "+authenticatedUser.getRole().name());
+            // System.out.println("Role Of User : "+authenticatedUser.getRole().name());
             Token tokens = tokenManager.generateNewToken(authenticatedUser.getUserName(),authenticatedUser.getRole().name(),authenticatedUser.getUserId().toString());
             
             authenticatedUser.setPassword("");

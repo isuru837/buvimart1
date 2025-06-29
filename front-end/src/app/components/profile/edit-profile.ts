@@ -31,30 +31,25 @@ export class EditProfile implements OnInit, OnDestroy {
   isLoading: boolean = false;
   validationErrors: { [key: string]: string } = {};
   private userSubscription: Subscription;
+  originalUser: any = {};
 
   constructor(
     private http: HttpClient,
     private router: Router,
     private authService: AuthService
   ) {
-    console.log('EditProfile constructor - isLoggedIn:', this.authService.isLoggedIn());
     this.userSubscription = this.authService.user$.subscribe(user => {
-      console.log('User subscription received:', user);
       if (user) {
         this.user = { ...user };
-        console.log('User data set in component:', this.user);
+        this.originalUser = { ...user };
       } else {
-        console.log('No user data available, redirecting to sign in');
         this.router.navigate(['/sign-in']);
       }
     });
   }
 
   ngOnInit() {
-    console.log('EditProfile ngOnInit - isLoggedIn:', this.authService.isLoggedIn());
-    // Check if user is logged in
     if (!this.authService.isLoggedIn()) {
-      console.log('User not logged in, redirecting to sign in');
       this.router.navigate(['/sign-in']);
     }
   }
@@ -108,7 +103,6 @@ export class EditProfile implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log('Form submitted with user data:', this.user);
     this.isLoading = true;
     this.errorMessage = '';
 
@@ -121,11 +115,9 @@ export class EditProfile implements OnInit, OnDestroy {
     // Use the AuthService's updateUser method
     this.authService.updateUser(this.user).subscribe({
       next: (response) => {
-        console.log('Profile updated successfully:', response);
         this.router.navigate(['/profile']);
       },
       error: (error) => {
-        console.error('Error updating profile:', error);
         this.errorMessage = error.message || 'Failed to update profile. Please try again.';
         this.isLoading = false;
       },
@@ -137,5 +129,15 @@ export class EditProfile implements OnInit, OnDestroy {
 
   goBack() {
     this.router.navigate(['/profile']);
+  }
+
+  isFormDirty(): boolean {
+    // Compare each field in user and originalUser
+    for (const key of Object.keys(this.user)) {
+      if (this.user[key] !== this.originalUser[key]) {
+        return true;
+      }
+    }
+    return false;
   }
 } 

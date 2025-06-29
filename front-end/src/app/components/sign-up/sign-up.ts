@@ -144,13 +144,9 @@ export class SignUp {
       },
       error: (err) => {
         this.zone.run(() => {
-        console.log('Error response:', err);
-        console.log('Error object:', err.error);
-        console.log('Error message:', err.error?.error);
         this.errorMessage = err?.error?.error || 'Registration failed.';
         this.cdr.detectChanges();
-        console.log('Final error message:', this.errorMessage);}
-        )
+        })
       }
     });
   }

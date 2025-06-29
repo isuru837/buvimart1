@@ -134,7 +134,7 @@
         <button 
           type="submit" 
           class="btn save-btn" 
-          [disabled]="editForm.invalid || isLoading">
+          [disabled]="editForm.invalid || isLoading || !isFormDirty()">
           {{ isLoading ? 'Saving...' : 'Save Changes' }}
         </button>
         <button 
