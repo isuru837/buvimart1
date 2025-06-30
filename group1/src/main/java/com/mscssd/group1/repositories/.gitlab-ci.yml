@@ -1,0 +1,10 @@
+stages:
+  - security_scan
+
+snyk-scan:
+  image: snyk/snyk:alpine
+  stage: security_scan
+  script:
+    - snyk auth $SNYK_TOKEN
+    - snyk test --all-projects
+    - snyk code test
